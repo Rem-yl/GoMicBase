@@ -1,0 +1,17 @@
+syntax="proto3";
+
+option go_package = "/pb";
+
+service RemService {
+    rpc HelloName(RemStreamRequest) returns (stream RemStreamResponse); 
+    rpc PostName(stream RemStreamRequest) returns (RemStreamResponse);  
+    rpc FullStream(stream RemStreamRequest) returns (stream RemStreamResponse);
+}
+
+message RemStreamRequest {
+    string name = 1;
+}
+
+message RemStreamResponse {
+    string msg = 1;
+}
