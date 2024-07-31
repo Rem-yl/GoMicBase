@@ -1,7 +1,7 @@
 package biz
 
 import (
-	"Account/custom_error"
+	"Account/account_err"
 	"Account/internal"
 	"Account/model"
 	"Account/proto/pb"
@@ -38,7 +38,7 @@ func Paginate(pageNumber, pageSize int) func(db *gorm.DB) *gorm.DB {
 
 func AccountModel2Resp(account model.Account) *pb.AccountResponse {
 	accountResp := &pb.AccountResponse{
-		Id:          0,
+		Id:          uint32(account.ID),
 		PhoneNumber: account.PhoneNumber,
 		Password:    account.Password,
 		Nickname:    account.NickName,
@@ -73,7 +73,7 @@ func (server AccountService) GetAccountByName(ctx context.Context, req *pb.NameR
 	var account model.Account
 	result := internal.DB.Where(&model.Account{NickName: req.Name}).First(&account)
 	if result.RowsAffected == 0 {
-		return nil, errors.New(custom_error.AccountNotFound)
+		return nil, errors.New(account_err.AccountNotFound)
 	}
 
 	resp = AccountModel2Resp(account)
@@ -84,7 +84,7 @@ func (server AccountService) GetAccountByPhoneNumber(ctx context.Context, req *p
 	var account model.Account
 	result := internal.DB.Where(&model.Account{PhoneNumber: req.PhoneNumber}).First(&account)
 	if result.RowsAffected == 0 {
-		return nil, errors.New(custom_error.AccountNotFound)
+		return nil, errors.New(account_err.AccountNotFound)
 	}
 
 	resp = AccountModel2Resp(account)
@@ -95,7 +95,7 @@ func (server AccountService) GetAccountById(ctx context.Context, req *pb.IdReque
 	var account model.Account
 	result := internal.DB.First(&account, req.Id)
 	if result.RowsAffected == 0 {
-		return nil, errors.New(custom_error.AccountNotFound)
+		return nil, errors.New(account_err.AccountNotFound)
 	}
 
 	resp = AccountModel2Resp(account)
@@ -107,7 +107,7 @@ func (server AccountService) AddAccount(ctx context.Context, req *pb.AddAccountR
 	// 检查手机号和昵称是否存在
 	result := internal.DB.Find(&account, "phone_number=? OR nick_name=?", req.PhoneNumber, req.Nickname)
 	if result.RowsAffected != 0 {
-		return nil, errors.New(custom_error.AccountExist)
+		return nil, errors.New(account_err.AccountExist)
 	}
 	salt, encoder := password.Encode(req.Password, &DefaultOptions)
 
@@ -120,7 +120,7 @@ func (server AccountService) AddAccount(ctx context.Context, req *pb.AddAccountR
 
 	r := internal.DB.Create(&account)
 	if r.Error != nil {
-		return nil, errors.New(custom_error.AccountCreateFail)
+		return nil, errors.New(account_err.AccountCreateFail)
 	}
 
 	resp = AccountModel2Resp(account)
@@ -131,7 +131,7 @@ func (server AccountService) UpdateAccount(ctx context.Context, req *pb.UpdateAc
 	var account model.Account
 	result := internal.DB.First(&account, req.Id)
 	if result.RowsAffected == 0 {
-		return nil, errors.New(custom_error.AccountNotFound)
+		return nil, errors.New(account_err.AccountNotFound)
 	}
 
 	account.NickName = req.Nickname
@@ -141,7 +141,7 @@ func (server AccountService) UpdateAccount(ctx context.Context, req *pb.UpdateAc
 
 	result = internal.DB.Save(&account)
 	if result.RowsAffected == 0 {
-		return nil, errors.New(custom_error.UpdateFailed)
+		return nil, errors.New(account_err.UpdateFailed)
 	}
 
 	resp = AccountModel2Resp(account)
@@ -152,7 +152,7 @@ func (server AccountService) CheckNamePassword(ctx context.Context, req *pb.Chec
 	var account model.Account
 	result := internal.DB.First(&account, req.Id)
 	if result.RowsAffected == 0 {
-		return nil, errors.New(custom_error.AccountNotFound)
+		return nil, errors.New(account_err.AccountNotFound)
 	}
 
 	resp = &pb.CheckAccountResponse{}

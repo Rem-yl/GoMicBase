@@ -1,7 +1,7 @@
 package biz
 
 import (
-	"Account/custom_error"
+	"Account/account_err"
 	"Account/internal"
 	"Account/proto/pb"
 	"context"
@@ -57,7 +57,7 @@ func TestAccountServer_GetAccountById(t *testing.T) {
 	}
 	resp, err := accountServer.GetAccountById(context.Background(), req)
 	if err != nil {
-		fmt.Println(custom_error.AccountNotFound)
+		fmt.Println(account_err.AccountNotFound)
 		return
 	}
 
@@ -71,7 +71,7 @@ func TestAccountServer_GetAccountByName(t *testing.T) {
 	}
 	resp, err := accountServer.GetAccountByName(context.Background(), rep)
 	if err != nil {
-		fmt.Println(custom_error.AccountNotFound)
+		fmt.Println(account_err.AccountNotFound)
 		return
 	}
 	fmt.Printf("ID: %d, Name: %s, phone: %s\n", resp.Id, resp.Nickname, resp.PhoneNumber)
@@ -84,7 +84,7 @@ func TestAccountServer_GetAccountByPhoneNumber(t *testing.T) {
 	}
 	resp, err := accountServer.GetAccountByPhoneNumber(context.Background(), req)
 	if err != nil {
-		fmt.Println(custom_error.AccountNotFound)
+		fmt.Println(account_err.AccountNotFound)
 		return
 	}
 	fmt.Printf("ID: %d, Name: %s, phone: %s\n", resp.Id, resp.Nickname, resp.PhoneNumber)
@@ -98,7 +98,7 @@ func TestAccountServer_GetAccountList(t *testing.T) {
 	}
 	resp, err := accountServer.GetAccountList(context.Background(), req)
 	if err != nil {
-		fmt.Println(custom_error.AccountNotFound)
+		fmt.Println(account_err.AccountNotFound)
 		return
 	}
 

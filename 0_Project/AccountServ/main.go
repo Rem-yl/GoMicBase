@@ -16,7 +16,7 @@ func init() {
 }
 
 func main() {
-	ip := flag.String("ip", "localhost", "默认ip")
+	ip := flag.String("ip", "127.0.0.1", "默认ip")
 	port := flag.Int("port", 9095, "默认端口")
 	addr := fmt.Sprintf("%s:%d", *ip, *port)
 
