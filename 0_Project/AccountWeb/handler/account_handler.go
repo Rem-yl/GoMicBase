@@ -4,13 +4,22 @@ import (
 	"Account/proto/pb"
 	"AccountWeb/res"
 	"context"
+	"crypto/md5"
 	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/anaskhan96/go-password-encoder"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 )
+
+var DefaultOptions = password.Options{
+	SaltLen:      16,
+	Iterations:   100,
+	KeyLen:       32,
+	HashFunction: md5.New,
+}
 
 func AccountListHandler(ctx *gin.Context) {
 	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
@@ -85,4 +94,51 @@ func GetAccountIdHandler(ctx *gin.Context) {
 		"msg":  "ok",
 		"data": resAccount,
 	})
+}
+
+type UserLogin struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Id       uint32 `json:"id"`
+}
+
+func AccountLogin(ctx *gin.Context) {
+	var user UserLogin
+	if err := ctx.BindJSON(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	if err != nil {
+		fmt.Printf("Conn err :%s", err.Error())
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg": err.Error(),
+		})
+		return
+	}
+
+	client := pb.NewAccountServiceClient(conn)
+	req := &pb.CheckAccountRequest{
+		Nickname: user.Name,
+		Password: user.Password,
+		Id:       user.Id,
+	}
+
+	resp, err := client.CheckNamePassword(context.Background(), req)
+	if err != nil {
+		fmt.Printf("CheckNamePassword Failed: %s\n", err.Error())
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg":   "ok",
+		"Check": resp.Check,
+	})
+
 }

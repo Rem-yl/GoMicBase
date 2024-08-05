@@ -18,6 +18,7 @@ func main() {
 	{
 		accountGroup.GET("/list", handler.AccountListHandler)
 		accountGroup.GET("/user/:id", handler.GetAccountIdHandler)
+		accountGroup.POST("/login", handler.AccountLogin) // use phoneNumber & password
 	}
 
 	r.Run(addr)
