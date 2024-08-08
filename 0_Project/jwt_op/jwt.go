@@ -1,7 +1,7 @@
 package jwt_op
 
 import (
-	"GoMicBase/0_Project/conf"
+	"conf"
 	"errors"
 	"fmt"
 	"time"
@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	TokenExpired     = errors.New("Token Expired")
-	TokenNotValidYet = errors.New("Token Not Valid Yet")
-	TokenMalformed   = errors.New("Token Malformed")
-	TokenInvalid     = errors.New("Token Invalid")
+	ErrTokenExpired     = errors.New("Token Expired")
+	ErrTokenNotValidYet = errors.New("Token Not Valid Yet")
+	ErrTokenMalformed   = errors.New("Token Malformed")
+	ErrTokenInvalid     = errors.New("Token Invalid")
 )
 
 type CustomClaims struct {
@@ -52,13 +52,13 @@ func (j *JWT) ParseToken(tokenStr string) (*CustomClaims, error) {
 		if result, ok := err.(jwt.ValidationError); ok {
 			if result.Errors != 0 {
 				if jwt.ValidationErrorMalformed != 0 {
-					return nil, TokenMalformed
+					return nil, ErrTokenMalformed
 				} else if jwt.ValidationErrorExpired != 0 {
-					return nil, TokenExpired
+					return nil, ErrTokenExpired
 				} else if jwt.ValidationErrorNotValidYet != 0 {
-					return nil, TokenNotValidYet
+					return nil, ErrTokenNotValidYet
 				} else {
-					return nil, TokenInvalid
+					return nil, ErrTokenInvalid
 				}
 			}
 		}
@@ -69,9 +69,9 @@ func (j *JWT) ParseToken(tokenStr string) (*CustomClaims, error) {
 			return claims, nil
 		}
 
-		return nil, TokenInvalid
+		return nil, ErrTokenInvalid
 	} else {
-		return nil, TokenInvalid
+		return nil, ErrTokenInvalid
 	}
 
 }
@@ -91,8 +91,8 @@ func (j *JWT) RefreshToken(tokenStr string) (string, error) {
 	if claims, ok := token.Claims.(CustomClaims); ok && token.Valid {
 		jwt.TimeFunc = time.Now
 		claims.StandardClaims.ExpiresAt = time.Now().Add(7 * 24 * time.Hour).Unix()
-		return j.GenerateJWT(*&claims)
+		return j.GenerateJWT(claims)
 	}
 
-	return "", TokenInvalid
+	return "", ErrTokenInvalid
 }

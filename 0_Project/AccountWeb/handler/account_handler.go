@@ -2,15 +2,19 @@ package handler
 
 import (
 	"Account/proto/pb"
+	"AccountWeb/req"
 	"AccountWeb/res"
 	"context"
 	"crypto/md5"
 	"fmt"
+	"jwt_op"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/anaskhan96/go-password-encoder"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 	"google.golang.org/grpc"
 )
 
@@ -140,5 +144,79 @@ func AccountLogin(ctx *gin.Context) {
 		"msg":   "ok",
 		"Check": resp.Check,
 	})
+}
 
+func LoginByPassword(ctx *gin.Context) {
+	var loginByPasword req.LoginByPassword
+	err := ctx.ShouldBind(&loginByPasword)
+	if err != nil {
+		fmt.Println("LoginByPassword解析参数出错: " + err.Error())
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg": "参数解析错误",
+		})
+		return
+	}
+
+	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	if err != nil {
+		fmt.Println("LoginByPassword拨号出错: " + err.Error())
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg": "拨号错误",
+		})
+		return
+	}
+
+	client := pb.NewAccountServiceClient(conn)
+	resp, err := client.GetAccountByPhoneNumber(context.Background(), &pb.PhoneNumberRequest{
+		PhoneNumber: loginByPasword.PhoneNumber,
+	})
+	if err != nil {
+		fmt.Println("GetAccountByPhoneNumber出错: " + err.Error())
+		return
+	}
+
+	fmt.Printf("xxxxxx: resp: %v\n", resp)
+	checkResp, err := client.CheckNamePassword(context.Background(), &pb.CheckAccountRequest{
+		Nickname: resp.Nickname,
+		Password: resp.Password,
+		Id:       resp.Id,
+	})
+	fmt.Printf("checkResp: %v\n", checkResp)
+	if err != nil {
+		fmt.Println("CheckNamePassword出错: " + err.Error())
+		return
+	}
+	checkResult := "登录失败"
+	if checkResp.Check {
+		checkResult = "登录成功"
+		j := jwt_op.NewJWT()
+		now := time.Now()
+		claims := jwt_op.CustomClaims{
+			StandardClaims: jwt.StandardClaims{
+				NotBefore: now.Unix(),
+				ExpiresAt: now.Add(time.Hour * 24 * 30).Unix(),
+			},
+			Id:          resp.Id,
+			Nickname:    resp.Nickname,
+			AuthorityId: int32(resp.Role),
+		}
+		token, err := j.GenerateJWT(claims)
+		if err != nil {
+			fmt.Println("GenerateJWT 出错: " + err.Error())
+			ctx.JSON(http.StatusOK, gin.H{
+				"msg": err,
+			})
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":    "",
+			"result": checkResult,
+			"token":  token,
+		})
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg":    "",
+		"result": checkResult,
+		"token":  "",
+	})
 }
