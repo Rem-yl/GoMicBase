@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  db:
+    image: mysql/mysql-server
+    container_name: Account
+    ports:
+      - "3307:3306"
+    volumes:
+      - "/Users/yule/Documents/account_data:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD : 123456
