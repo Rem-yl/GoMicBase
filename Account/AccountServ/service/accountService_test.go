@@ -36,5 +36,65 @@ func TestCreateAccount(t *testing.T) {
 	} else {
 		log.Printf("Create Account: Name: %s, Phone: %s\n", resp.Name, resp.Phone)
 	}
+}
 
+func TestGetAccountByName(t *testing.T) {
+	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	client := pb.NewAccountServiceClient(conn)
+
+	req := &pb.AccountNameRequest{
+		Name: "ley",
+	}
+
+	resp, err := client.GetAccountByName(context.Background(), req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	log.Printf("Name: %s, Phone: %s", resp.Name, resp.Phone)
+}
+
+func TestGetAccountByPhone(t *testing.T) {
+	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	client := pb.NewAccountServiceClient(conn)
+	req := pb.AccountPhoneRequest{
+		Phone: "18801117212",
+	}
+
+	resp, err := client.GetAccountByPhone(context.Background(), &req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	log.Printf("Name: %s, Phone: %s", resp.Name, resp.Phone)
+}
+
+func TestGGetAccountById(t *testing.T) {
+	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	client := pb.NewAccountServiceClient(conn)
+	req := pb.AccountIdRequest{
+		Id: 123,
+	}
+
+	resp, err := client.GetAccountById(context.Background(), &req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	log.Printf("Name: %s, Phone: %s", resp.Name, resp.Phone)
 }

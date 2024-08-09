@@ -9,4 +9,5 @@ const (
 	ErrListen           = "Listen Failed"
 	ErrGrpcServerFailed = "Grpc Server Failed"
 	ErrCreateAccount    = "Create Account Failed"
+	ErrAccountNotFound  = "Account Not Found"
 )
