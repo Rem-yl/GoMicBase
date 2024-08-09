@@ -13,13 +13,13 @@ func TestCreateAccount(t *testing.T) {
 	// server := AccountService{}
 	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
 	if err != nil {
-		log.Println(err)
+		log.Panicln(err)
 	}
 
 	client := pb.NewAccountServiceClient(conn)
 
 	req := &pb.CreateAccountRequest{
-		Name:     "Rem",
+		Name:     "Ram",
 		Phone:    "18801117212",
 		Password: "123456",
 	}
@@ -30,6 +30,11 @@ func TestCreateAccount(t *testing.T) {
 		return
 	}
 
-	log.Printf("Create Account: Name: %s, Phone: %s\n", resp.Name, resp.Phone)
+	log.Printf("xxxxxxx: %v", resp)
+	if resp == nil {
+		log.Printf("Account Exist: Name: %s, Phone: %s\n", req.Name, req.Phone)
+	} else {
+		log.Printf("Create Account: Name: %s, Phone: %s\n", resp.Name, resp.Phone)
+	}
 
 }
