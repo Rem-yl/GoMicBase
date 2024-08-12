@@ -3,6 +3,7 @@ package model
 import (
 	"Account/AccountServ/database"
 	"Account/AccountServ/pb"
+	share "Account/Share"
 )
 
 func AccountModel2Pb(account database.Account) (resp *pb.AccountResponse) {
@@ -14,4 +15,15 @@ func AccountModel2Pb(account database.Account) (resp *pb.AccountResponse) {
 	}
 
 	return resp
+}
+
+func PbResp2CustomAccount(resp *pb.AccountResponse) (account share.CustomAccount) {
+	account = share.CustomAccount{
+		Id:       resp.Id,
+		Name:     resp.Name,
+		Phone:    resp.Phone,
+		Password: resp.Password,
+	}
+
+	return account
 }

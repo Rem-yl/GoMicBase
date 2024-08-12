@@ -1,11 +1,13 @@
 # Account
+
 账户服务
 
 ## 目录架构
+
 - AccountServ : 账户微服务
 - AccountWeb : 账户web服务
 - Conf : 项目配置
-- Database : 数据库相关
+- Log : 日志配置
 - Share : 全局变量，包括err等
 
 ## 思路&步骤
@@ -14,3 +16,6 @@
    - mysql的默认数据保存位置在/var/lib/mysql
    - `lsof -i :3306` : 查看3306端口是否被占用
    - `lsof -i -P -n | grep LISTEN` : 查看所有被占用的端口
+
+2. 构建Account GRRC服务
+3. 构建Account Web服务

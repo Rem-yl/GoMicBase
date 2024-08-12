@@ -11,4 +11,5 @@ const (
 	ErrCreateAccount      = "Create Account Failed"
 	ErrAccountNotFound    = "Account Not Found"
 	ErrConfigFileNotFound = "Config File Not Found"
+	ErrGrpcDialFailed     = "Grpc Dial Failed"
 )

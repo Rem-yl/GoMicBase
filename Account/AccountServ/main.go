@@ -3,31 +3,19 @@ package main
 import (
 	"Account/AccountServ/pb"
 	"Account/AccountServ/service"
+	conf "Account/Conf"
+	logger "Account/Log"
 	share "Account/Share"
 	"fmt"
 	"log"
 	"net"
 
-	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
-func loadConfig() *viper.Viper {
-	config := viper.New()
-
-	config.AddConfigPath("./conf")
-	config.SetConfigName("default")
-	config.SetConfigType("yaml")
-
-	if err := config.ReadInConfig(); err != nil {
-		log.Panicf("%s : %s\n", share.ErrConfigFileNotFound, err.Error())
-	}
-
-	return config
-}
-
 func main() {
-	config := loadConfig()
+	logger.Init()
+	config := conf.LoadConfig()
 	host := config.GetString("grpc.host")
 	port := config.GetString("grpc.port")
 	dsn := fmt.Sprintf("%s:%s", host, port)
