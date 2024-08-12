@@ -4,24 +4,45 @@ import (
 	"Account/AccountServ/pb"
 	"Account/AccountServ/service"
 	share "Account/Share"
+	"fmt"
 	"log"
 	"net"
 
+	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
+func loadConfig() *viper.Viper {
+	config := viper.New()
+
+	config.AddConfigPath("./conf")
+	config.SetConfigName("default")
+	config.SetConfigType("yaml")
+
+	if err := config.ReadInConfig(); err != nil {
+		log.Panicf("%s : %s\n", share.ErrConfigFileNotFound, err.Error())
+	}
+
+	return config
+}
+
 func main() {
+	config := loadConfig()
+	host := config.GetString("grpc.host")
+	port := config.GetString("grpc.port")
+	dsn := fmt.Sprintf("%s:%s", host, port)
+
 	grpcServer := grpc.NewServer()
 
 	pb.RegisterAccountServiceServer(grpcServer, &service.AccountService{})
-	listen, err := net.Listen("tcp", "127.0.0.1:9095")
+	listen, err := net.Listen("tcp", dsn)
 	if err != nil {
-		log.Fatalln(share.ErrListen + err.Error())
+		log.Panicf("%s:%s\n", share.ErrListen, err.Error())
 	}
 
-	log.Println("Start Account GRPC Service on 127.0.0.1:9095")
+	log.Printf("Start Account GRPC Service on %s\n", dsn)
 
 	if err := grpcServer.Serve(listen); err != nil {
-		log.Fatalf(share.ErrGrpcServerFailed + err.Error())
+		log.Panicf("%s:%s\n", share.ErrGrpcServerFailed, err.Error())
 	}
 }

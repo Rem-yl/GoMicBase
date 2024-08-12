@@ -1,9 +1,9 @@
 package service
 
 import (
+	"Account/AccountServ/database"
 	"Account/AccountServ/model"
 	"Account/AccountServ/pb"
-	"Account/Database"
 	share "Account/Share"
 	"context"
 	"errors"
@@ -15,8 +15,8 @@ type AccountService struct {
 }
 
 func (server *AccountService) CreateAccount(ctx context.Context, req *pb.CreateAccountRequest) (resp *pb.AccountResponse, err error) {
-	db := Database.MysqlDB
-	var account share.Account
+	db := database.MysqlDB
+	var account database.Account
 
 	result := db.Where("name=?", req.Name).First(&account)
 	if result.RowsAffected != 0 {
@@ -30,7 +30,7 @@ func (server *AccountService) CreateAccount(ctx context.Context, req *pb.CreateA
 		return nil, nil
 	}
 
-	account = share.Account{
+	account = database.Account{
 		Name:     req.Name,
 		Phone:    req.Phone,
 		Password: req.Password,
@@ -47,8 +47,8 @@ func (server *AccountService) CreateAccount(ctx context.Context, req *pb.CreateA
 }
 
 func (server *AccountService) GetAccountByName(ctx context.Context, req *pb.AccountNameRequest) (resp *pb.AccountResponse, err error) {
-	db := Database.MysqlDB
-	var account share.Account
+	db := database.MysqlDB
+	var account database.Account
 	result := db.Where("name=?", req.Name).First(&account)
 	if result.RowsAffected == 0 {
 		log.Printf("Account Not Found: %s", req.Name)
@@ -60,8 +60,8 @@ func (server *AccountService) GetAccountByName(ctx context.Context, req *pb.Acco
 }
 
 func (server *AccountService) GetAccountByPhone(ctx context.Context, req *pb.AccountPhoneRequest) (resp *pb.AccountResponse, err error) {
-	db := Database.MysqlDB
-	var account share.Account
+	db := database.MysqlDB
+	var account database.Account
 	result := db.Where("phone=?", req.Phone).First(&account)
 	if result.RowsAffected == 0 {
 		log.Printf("Account Not Found: Phone: %s", req.Phone)
@@ -73,8 +73,8 @@ func (server *AccountService) GetAccountByPhone(ctx context.Context, req *pb.Acc
 }
 
 func (server *AccountService) GetAccountById(ctx context.Context, req *pb.AccountIdRequest) (resp *pb.AccountResponse, err error) {
-	db := Database.MysqlDB
-	var account share.Account
+	db := database.MysqlDB
+	var account database.Account
 	result := db.First(&account, req.Id)
 	if result.RowsAffected == 0 {
 		log.Printf("Account Not Found: Id: %d", req.Id)

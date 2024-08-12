@@ -79,7 +79,7 @@ func TestGetAccountByPhone(t *testing.T) {
 	log.Printf("Name: %s, Phone: %s", resp.Name, resp.Phone)
 }
 
-func TestGGetAccountById(t *testing.T) {
+func TestGetAccountById(t *testing.T) {
 	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
 	if err != nil {
 		log.Panicln(err)

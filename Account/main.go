@@ -1,12 +1,12 @@
 package main
 
 import (
-	"Account/Database"
+	"Account/AccountServ/database"
 	"log"
 )
 
 func main() {
-	db := Database.MysqlDB
+	db := database.MysqlDB
 	// fmt.Println(db)
 	log.Println(db)
 }

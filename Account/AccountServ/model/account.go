@@ -1,11 +1,11 @@
 package model
 
 import (
+	"Account/AccountServ/database"
 	"Account/AccountServ/pb"
-	share "Account/Share"
 )
 
-func AccountModel2Pb(account share.Account) (resp *pb.AccountResponse) {
+func AccountModel2Pb(account database.Account) (resp *pb.AccountResponse) {
 	resp = &pb.AccountResponse{
 		Id:       uint32(account.ID),
 		Name:     account.Name,
