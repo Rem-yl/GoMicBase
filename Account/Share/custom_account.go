@@ -6,5 +6,5 @@ type CustomAccount struct {
 	Phone          string `json:"phone"`
 	Password       string `json:"password"`
 	Salt           string `json:"salt"`
-	HashedPassword string `json:"hashed_password`
+	HashedPassword string `json:"hashed_password"`
 }

@@ -30,6 +30,8 @@ func main() {
 		accountGroup.GET("/id/:id", handler.GetAccountByIdHandler)
 		accountGroup.GET("/name/:name", handler.GetAccountByNameHandler)
 		accountGroup.GET("/phone/:phone", handler.GetAccountByPhoneHandler)
+		accountGroup.GET("/create", handler.CreateNewAccountHandler)
+		accountGroup.GET("/login", handler.LoginHandler)
 	}
 
 	r.Run(dsn)

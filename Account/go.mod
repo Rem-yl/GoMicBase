@@ -5,6 +5,7 @@ go 1.22.5
 require (
 	github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72
 	github.com/gin-gonic/gin v1.10.0
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/spf13/viper v1.19.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2

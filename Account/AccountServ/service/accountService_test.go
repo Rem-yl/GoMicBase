@@ -98,3 +98,25 @@ func TestGetAccountById(t *testing.T) {
 
 	log.Printf("Name: %s, Phone: %s", resp.Name, resp.Phone)
 }
+
+func TestCheckNamePassword(t *testing.T) {
+	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	client := pb.NewAccountServiceClient(conn)
+
+	req := &pb.CheckNamePasswordRequest{
+		Name:     "Ram",
+		Password: "123456",
+	}
+
+	resp, err := client.CheckNamePassword(context.Background(), req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	log.Printf("Name: %s, Phone: %s, check: %t\n", req.Name, req.Password, resp.Check)
+}

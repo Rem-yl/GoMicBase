@@ -9,6 +9,9 @@ service AccountService {
     rpc GetAccountByName(AccountNameRequest) returns (AccountResponse);
     rpc GetAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
     rpc GetAccountById(AccountIdRequest) returns (AccountResponse);
+
+    rpc CheckNamePassword(CheckNamePasswordRequest) returns (CheckResponse);
+    rpc CheckPhonePassword(CheckPhonePasswordRequest) returns (CheckResponse);
 } 
 
 message AccountResponse {
@@ -18,6 +21,20 @@ message AccountResponse {
     string password = 4;
     string salt = 5;
     string hashedPassword = 6;
+}
+
+message CheckResponse {
+    bool check = 1;
+}
+
+message CheckNamePasswordRequest {
+    string name = 1;
+    string password = 2;
+}
+
+message CheckPhonePasswordRequest {
+    string phone = 1;
+    string password = 2;
 }
 
 message AccountNameRequest {

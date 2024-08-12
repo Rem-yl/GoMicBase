@@ -1,6 +1,8 @@
 # Account
 
 账户服务
+## 资料
+- [如何在Go中使用JWT](https://juejin.cn/post/7093035836689612836)
 
 ## 目录架构
 

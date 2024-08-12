@@ -90,3 +90,25 @@ func (server *AccountService) GetAccountById(ctx context.Context, req *pb.Accoun
 	resp = model.AccountModel2Pb(account)
 	return resp, nil
 }
+
+func (server *AccountService) CheckNamePassword(ctx context.Context, req *pb.CheckNamePasswordRequest) (resp *pb.CheckResponse, err error) {
+	db := database.MysqlDB
+	var account database.Account
+	result := db.Where("name=?", req.Name).First(&account)
+	if result.RowsAffected == 0 {
+		log.Printf("Account Not Found: Name: %s", req.Name)
+		return nil, errors.New(share.ErrAccountNotFound)
+	}
+
+	check := password.Verify(req.Password, account.Salt, account.HashedPassword, &share.PasswordOption)
+
+	resp = &pb.CheckResponse{
+		Check: check,
+	}
+
+	return resp, nil
+}
+
+func (server *AccountService) CheckPhonePassword(ctx context.Context, req *pb.CheckPhonePasswordRequest) (resp *pb.CheckResponse, err error) {
+	return nil, nil
+}

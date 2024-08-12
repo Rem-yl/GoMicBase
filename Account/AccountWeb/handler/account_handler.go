@@ -189,3 +189,70 @@ func GetAccountByPhoneHandler(ctx *gin.Context) {
 		"data": accountJSON,
 	})
 }
+
+type newAccount struct {
+	Name     string `form:"name"`
+	Phone    string `form:"phone"`
+	Password string `form:"password"`
+}
+
+func CreateNewAccountHandler(ctx *gin.Context) {
+	var account newAccount
+	if err := ctx.ShouldBind(&account); err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
+
+	addr := getGrpcAddr()
+	conn, err := grpc.Dial(addr, grpc.WithInsecure())
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
+
+	client := pb.NewAccountServiceClient(conn)
+	req := &pb.CreateAccountRequest{
+		Name:     account.Name,
+		Phone:    account.Phone,
+		Password: account.Password,
+	}
+	resp, err := client.CreateAccount(context.Background(), req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
+
+	accountResp := model.PbResp2CustomAccount(resp)
+	jsonData, err := json.Marshal(accountResp)
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
+
+	accountJSON := string(jsonData)
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg":  "ok",
+		"data": accountJSON,
+	})
+
+}
+
+func LoginHandler(ctx *gin.Context) {
+
+}

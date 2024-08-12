@@ -12,4 +12,5 @@ const (
 	ErrAccountNotFound    = "Account Not Found"
 	ErrConfigFileNotFound = "Config File Not Found"
 	ErrGrpcDialFailed     = "Grpc Dial Failed"
+	ErrInvalidToken       = "Invalid Token"
 )
