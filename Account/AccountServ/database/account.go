@@ -14,9 +14,11 @@ var MysqlDB *gorm.DB
 
 type Account struct {
 	gorm.Model
-	Name     string `gorm:"uniqueIndex; not null; type: varchar(12)"`
-	Phone    string `gorm:"uniqueIndex; not null; type: varchar(11)"`
-	Password string `gorm:"not null; comment: hashed password"`
+	Name           string `gorm:"uniqueIndex; not null; type: varchar(12)"`
+	Phone          string `gorm:"uniqueIndex; not null; type: varchar(11)"`
+	Password       string `gorm:"not null; comment: origin password"`
+	HashedPassword string `gorm:"not null; comment: hashed password"`
+	Salt           string `gorm:"not null; comment: use to hash password"`
 }
 
 func loadConfig() *viper.Viper {

@@ -19,9 +19,9 @@ func TestCreateAccount(t *testing.T) {
 	client := pb.NewAccountServiceClient(conn)
 
 	req := &pb.CreateAccountRequest{
-		Name:     "Ram",
-		Phone:    "18801117212",
-		Password: "123456",
+		Name:     "ley",
+		Phone:    "18801117213",
+		Password: "123457",
 	}
 
 	resp, err := client.CreateAccount(context.Background(), req)

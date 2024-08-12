@@ -16,6 +16,8 @@ message AccountResponse {
     string name = 2;
     string phone = 3;
     string password = 4;
+    string salt = 5;
+    string hashedPassword = 6;
 }
 
 message AccountNameRequest {

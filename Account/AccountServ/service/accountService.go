@@ -8,6 +8,8 @@ import (
 	"context"
 	"errors"
 	"log"
+
+	"github.com/anaskhan96/go-password-encoder"
 )
 
 type AccountService struct {
@@ -30,11 +32,15 @@ func (server *AccountService) CreateAccount(ctx context.Context, req *pb.CreateA
 		return nil, nil
 	}
 
+	salt, hashedPassword := password.Encode(req.Password, &share.PasswordOption)
 	account = database.Account{
-		Name:     req.Name,
-		Phone:    req.Phone,
-		Password: req.Password,
+		Name:           req.Name,
+		Phone:          req.Phone,
+		Password:       req.Password,
+		Salt:           salt,
+		HashedPassword: hashedPassword,
 	}
+
 	result = db.Create(&account)
 	if result.RowsAffected == 0 {
 		log.Printf("%s : %s\n", share.ErrCreateAccount, result.Error.Error())
