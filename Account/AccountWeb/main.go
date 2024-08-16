@@ -2,6 +2,7 @@ package main
 
 import (
 	"Account/AccountWeb/handler"
+	"Account/AccountWeb/middleware"
 	conf "Account/Conf"
 	logger "Account/Log"
 	"fmt"
@@ -31,7 +32,8 @@ func main() {
 		accountGroup.GET("/name/:name", handler.GetAccountByNameHandler)
 		accountGroup.GET("/phone/:phone", handler.GetAccountByPhoneHandler)
 		accountGroup.GET("/create", handler.CreateNewAccountHandler)
-		accountGroup.GET("/login", handler.LoginHandler)
+		accountGroup.POST("/login", handler.LoginHandler)
+		accountGroup.GET("/jwt_test", middleware.JWTAuthMiddleware(), handler.JWTTestHandler)
 	}
 
 	r.Run(dsn)

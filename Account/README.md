@@ -21,3 +21,16 @@
 
 2. 构建Account GRRC服务
 3. 构建Account Web服务
+4. JWT功能测试
+   1. 运行服务
+      ```bash
+         # shell 1
+         cd AccountServ
+         go run main.go
+
+         # shell 2
+         cd AccountWeb
+         go run main.go
+      ```
+   2. 在RapidAPI中使用POST请求 127.0.0.1:8080/account/login, 获得返回的JWT token
+   3. 在RapidAPI中使用GET请求 127.0.0.1:8080/account/jwt_test, 请求头的Auth字段天填写刚刚获得的JWT token

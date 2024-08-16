@@ -3,7 +3,9 @@ package handler
 import (
 	"Account/AccountServ/model"
 	"Account/AccountServ/pb"
+	"Account/AccountWeb/jwt_op"
 	conf "Account/Conf"
+	share "Account/Share"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -250,9 +252,80 @@ func CreateNewAccountHandler(ctx *gin.Context) {
 		"msg":  "ok",
 		"data": accountJSON,
 	})
-
 }
 
 func LoginHandler(ctx *gin.Context) {
+	var account newAccount
+	err := ctx.ShouldBind(&account)
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  share.ErrParseAccount + err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
 
+	addr := getGrpcAddr()
+	conn, err := grpc.Dial(addr, grpc.WithInsecure())
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
+
+	client := pb.NewAccountServiceClient(conn)
+	req := &pb.CheckNamePasswordRequest{
+		Name:     account.Name,
+		Password: account.Password,
+	}
+
+	resp, err := client.CheckNamePassword(context.Background(), req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
+
+	if !resp.Check {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  share.ErrNotRegister,
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
+
+	tokenStr, err := jwt_op.GenJWTToken(account.Name)
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  share.ErrGenJWTFailed + err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg": "ok",
+		"data": gin.H{
+			"token": tokenStr,
+		},
+	})
+}
+
+func JWTTestHandler(ctx *gin.Context) {
+	name := ctx.MustGet("name").(string)
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg": "JWT ok",
+		"data": gin.H{
+			"name": name,
+		},
+	})
 }

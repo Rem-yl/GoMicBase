@@ -13,4 +13,7 @@ const (
 	ErrConfigFileNotFound = "Config File Not Found"
 	ErrGrpcDialFailed     = "Grpc Dial Failed"
 	ErrInvalidToken       = "Invalid Token"
+	ErrParseAccount       = "Parse Account Failed"
+	ErrNotRegister        = "Register First"
+	ErrGenJWTFailed       = "Generate JWT Failed"
 )
