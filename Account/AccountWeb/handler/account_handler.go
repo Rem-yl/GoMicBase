@@ -85,7 +85,6 @@ func GetAccountByIdHandler(ctx *gin.Context) {
 		"msg":  "ok",
 		"data": accountJSON,
 	})
-
 }
 
 func GetAccountByNameHandler(ctx *gin.Context) {
