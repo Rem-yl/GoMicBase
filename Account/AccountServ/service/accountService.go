@@ -110,5 +110,19 @@ func (server *AccountService) CheckNamePassword(ctx context.Context, req *pb.Che
 }
 
 func (server *AccountService) CheckPhonePassword(ctx context.Context, req *pb.CheckPhonePasswordRequest) (resp *pb.CheckResponse, err error) {
-	return nil, nil
+	db := database.MysqlDB
+	var account database.Account
+	result := db.Where("phone=?", req.Phone).First(&account)
+	if result.RowsAffected == 0 {
+		log.Printf("Account Not Found: Phone: %s", req.Phone)
+		return nil, errors.New(share.ErrAccountNotFound)
+	}
+
+	check := password.Verify(req.Password, account.Salt, account.HashedPassword, &share.PasswordOption)
+
+	resp = &pb.CheckResponse{
+		Check: check,
+	}
+
+	return resp, nil
 }
