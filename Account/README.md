@@ -12,6 +12,12 @@
 - Log : 日志配置
 - Share : 全局变量，包括err等
 
+## 启动docker
+```bash
+cd Account
+docker-compose up -d
+```
+
 ## 思路&步骤
 1. 新建mysql的docker-compose
    - mysql的默认端口是3306

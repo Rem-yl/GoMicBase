@@ -1,12 +1,27 @@
 version: '3'
-
+# https://github.com/nacos-group/nacos-docker.git
 services:
-  db:
-    image: mysql/mysql-server
-    container_name: Account
-    ports:
-      - "3307:3306"
+  nacos:
+    image: nacos/nacos-server:latest
+    container_name: nacos-standalone-mysql
+    env_file:
+      - env/nacos-standlone-mysql.env
     volumes:
-      - "/Users/yule/Documents/account_data:/var/lib/mysql"
-    environment:
-      MYSQL_ROOT_PASSWORD : 123456
+      - /Users/yule/Documents/nacos_data/logs:/home/nacos/logs
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    depends_on:
+      - mysql
+  mysql:
+    container_name: Mysql
+    build:
+      context: .
+      dockerfile: env/Dockerfile
+    image: env/mysql:8.0.30
+    env_file:
+      - env/mysql.env 
+    volumes:
+      - /Users/yule/Documents/mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
