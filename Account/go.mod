@@ -6,7 +6,6 @@ require (
 	github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/nacos-group/nacos-sdk-go v1.1.4
 	github.com/nacos-group/nacos-sdk-go/v2 v2.2.7
 	github.com/spf13/viper v1.19.0
 	google.golang.org/grpc v1.65.0

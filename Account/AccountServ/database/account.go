@@ -1,10 +1,10 @@
 package database
 
 import (
-	"Account/AccountServ/internal"
 	conf "Account/Conf"
 	logger "Account/Log"
 	share "Account/Share"
+	"Account/internal"
 	"fmt"
 	"log"
 
@@ -29,11 +29,17 @@ type Account struct {
 func init() {
 	logger.Init()
 
-	if err = internal.LoadAccountServConfig("./conf", "dev", &nacosConfig, &AccountServConfig); err != nil {
+	//! TODO: 这里要解决AccountWeb和AccounServ同时初始化database这个包时的路径问题
+	if err = internal.LoadAccountServConfig("/Users/yule/Desktop/code/GoMicBase/Account/AccountServ/conf", "dev", &nacosConfig, &AccountServConfig); err != nil {
 		log.Panicln(err.Error())
 	}
 
+	fmt.Printf("%v", nacosConfig)
+	fmt.Printf("%v", AccountServConfig)
+
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", AccountServConfig.MysqlConf.User, AccountServConfig.MysqlConf.Password, AccountServConfig.MysqlConf.Host, AccountServConfig.MysqlConf.Port, AccountServConfig.MysqlConf.TableName)
+	fmt.Println("database account.go")
+	fmt.Println(dsn)
 	MysqlDB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Panicf("%s:%s\n", share.ErrDatabaseConn, err.Error())

@@ -5,7 +5,9 @@ import (
 	"Account/AccountWeb/middleware"
 	conf "Account/Conf"
 	logger "Account/Log"
+	"Account/internal"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,11 +16,12 @@ import (
 func main() {
 	logger.Init()
 
-	config := conf.LoadConfig()
-	host := config.GetString("web.host")
-	port := config.GetString("web.port")
-	dsn := fmt.Sprintf("%s:%s", host, port)
-
+	var nacosConfig conf.NacosConfig
+	var accountWebConfig conf.AccountWebConfig
+	if err := internal.LoadAccountWebConfig("./conf", "dev", &nacosConfig, &accountWebConfig); err != nil {
+		log.Panicln(err.Error())
+	}
+	dsn := fmt.Sprintf("%s:%d", accountWebConfig.Host, accountWebConfig.Port)
 	r := gin.Default()
 
 	accountGroup := r.Group("/account")
