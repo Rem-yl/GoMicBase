@@ -16,7 +16,7 @@ type NacosConfig struct {
 	Group       string `mapstructure:"group" json:"group"`
 }
 
-func LoadConfigFromNacos(config *NacosConfig) string {
+func LoadConfigFromNacos(config NacosConfig) string {
 	clientConfig := constant.ClientConfig{
 		NamespaceId:         config.NamespaceId, //we can create multiple clients with different namespaceId to support multiple namespace.When namespace is public, fill in the blank string here.
 		TimeoutMs:           5000,

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"Account/AccountServ/database"
 	"Account/AccountServ/pb"
 	"Account/AccountServ/service"
 	logger "Account/Log"
 	share "Account/Share"
+	"Account/internal"
 	"fmt"
 	"log"
 	"net"
@@ -15,8 +15,8 @@ import (
 
 func main() {
 	logger.Init()
-
-	dsn := fmt.Sprintf("%s:%d", database.AccountServConfig.AccountGrpcConf.Host, database.AccountServConfig.AccountGrpcConf.Port)
+	accountServConf := internal.AccountConf.AccountServConf
+	dsn := fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port)
 
 	grpcServer := grpc.NewServer()
 

@@ -3,11 +3,9 @@ package main
 import (
 	"Account/AccountWeb/handler"
 	"Account/AccountWeb/middleware"
-	conf "Account/Conf"
 	logger "Account/Log"
 	"Account/internal"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,12 +14,9 @@ import (
 func main() {
 	logger.Init()
 
-	var nacosConfig conf.NacosConfig
-	var accountWebConfig conf.AccountWebConfig
-	if err := internal.LoadAccountWebConfig("./conf", "dev", &nacosConfig, &accountWebConfig); err != nil {
-		log.Panicln(err.Error())
-	}
-	dsn := fmt.Sprintf("%s:%d", accountWebConfig.Host, accountWebConfig.Port)
+	accountWebConf := internal.AccountConf.AccountWebConf
+
+	dsn := fmt.Sprintf("%s:%d", accountWebConf.Host, accountWebConf.Port)
 	r := gin.Default()
 
 	accountGroup := r.Group("/account")

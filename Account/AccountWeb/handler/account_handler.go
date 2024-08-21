@@ -4,8 +4,8 @@ import (
 	"Account/AccountServ/model"
 	"Account/AccountServ/pb"
 	"Account/AccountWeb/jwt_op"
-	conf "Account/Conf"
 	share "Account/Share"
+	"Account/internal"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -16,13 +16,22 @@ import (
 	"google.golang.org/grpc"
 )
 
-func getGrpcAddr() string {
-	config := conf.LoadConfig()
-	host := config.GetString("grpc.host")
-	port := config.GetString("grpc.port")
+func getAccountServClient(ctx *gin.Context) (client pb.AccountServiceClient) {
+	accountServConf := internal.AccountConf.AccountServConf
+	addr := fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port)
 
-	addr := fmt.Sprintf("%s:%s", host, port)
-	return addr
+	conn, err := grpc.Dial(addr, grpc.WithInsecure())
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  err.Error(),
+			"data": "",
+		})
+		ctx.Abort()
+		return nil
+	}
+
+	client = pb.NewAccountServiceClient(conn)
+	return client
 }
 
 func GetAccountByIdHandler(ctx *gin.Context) {
@@ -46,18 +55,10 @@ func GetAccountByIdHandler(ctx *gin.Context) {
 		return
 	}
 
-	addr := getGrpcAddr()
-	conn, err := grpc.Dial(addr, grpc.WithInsecure())
-	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"msg":  err.Error(),
-			"data": "",
-		})
-		ctx.Abort()
+	client := getAccountServClient(ctx)
+	if client == nil {
 		return
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 	req := &pb.AccountIdRequest{
 		Id: uint32(id),
 	}
@@ -98,18 +99,10 @@ func GetAccountByNameHandler(ctx *gin.Context) {
 		return
 	}
 
-	addr := getGrpcAddr()
-	conn, err := grpc.Dial(addr, grpc.WithInsecure())
-	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"msg":  err.Error(),
-			"data": "",
-		})
-		ctx.Abort()
+	client := getAccountServClient(ctx)
+	if client == nil {
 		return
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 	req := &pb.AccountNameRequest{
 		Name: name,
 	}
@@ -150,18 +143,10 @@ func GetAccountByPhoneHandler(ctx *gin.Context) {
 		return
 	}
 
-	addr := getGrpcAddr()
-	conn, err := grpc.Dial(addr, grpc.WithInsecure())
-	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"msg":  err.Error(),
-			"data": "",
-		})
-		ctx.Abort()
+	client := getAccountServClient(ctx)
+	if client == nil {
 		return
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 	req := &pb.AccountPhoneRequest{
 		Phone: phone,
 	}
@@ -208,18 +193,10 @@ func CreateNewAccountHandler(ctx *gin.Context) {
 		return
 	}
 
-	addr := getGrpcAddr()
-	conn, err := grpc.Dial(addr, grpc.WithInsecure())
-	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"msg":  err.Error(),
-			"data": "",
-		})
-		ctx.Abort()
+	client := getAccountServClient(ctx)
+	if client == nil {
 		return
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 	req := &pb.CreateAccountRequest{
 		Name:     account.Name,
 		Phone:    account.Phone,
@@ -265,18 +242,10 @@ func LoginHandler(ctx *gin.Context) {
 		return
 	}
 
-	addr := getGrpcAddr()
-	conn, err := grpc.Dial(addr, grpc.WithInsecure())
-	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"msg":  err.Error(),
-			"data": "",
-		})
-		ctx.Abort()
+	client := getAccountServClient(ctx)
+	if client == nil {
 		return
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 	req := &pb.CheckNamePasswordRequest{
 		Name:     account.Name,
 		Password: account.Password,
