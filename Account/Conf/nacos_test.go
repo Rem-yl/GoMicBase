@@ -11,6 +11,14 @@ func TestLoadNacosConf(t *testing.T) {
 	namespaceId := "3eff1bb2-2e38-40e6-8cb4-04b3ab983da3"
 	dataId := "account_serv.json"
 	group := "account"
-	content := LoadNacosConf(addr, namespaceId, dataId, group, int32(port))
+
+	config := NacosConfig{
+		Addr:        addr,
+		Port:        int32(port),
+		NamespaceId: namespaceId,
+		DataId:      dataId,
+		Group:       group,
+	}
+	content := LoadConfigFromNacos(&config)
 	fmt.Println(content)
 }

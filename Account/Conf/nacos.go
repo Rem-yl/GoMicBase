@@ -1,14 +1,24 @@
 package conf
 
 import (
+	"log"
+
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 )
 
-func LoadNacosConf(addr, namespaceId, dataId, group string, port int32) string {
+type NacosConfig struct {
+	Addr        string `mapstructure:"addr" json:"addr"`
+	Port        int32  `mapstructure:"port" json:"port"`
+	NamespaceId string `mapstructure:"namespaceId" json:"namespaceId"`
+	DataId      string `mapstructure:"dataId" json:"dataId"`
+	Group       string `mapstructure:"group" json:"group"`
+}
+
+func LoadConfigFromNacos(config *NacosConfig) string {
 	clientConfig := constant.ClientConfig{
-		NamespaceId:         namespaceId, //we can create multiple clients with different namespaceId to support multiple namespace.When namespace is public, fill in the blank string here.
+		NamespaceId:         config.NamespaceId, //we can create multiple clients with different namespaceId to support multiple namespace.When namespace is public, fill in the blank string here.
 		TimeoutMs:           5000,
 		NotLoadCacheAtStart: true,
 		LogDir:              "/tmp/nacos/log",
@@ -17,8 +27,8 @@ func LoadNacosConf(addr, namespaceId, dataId, group string, port int32) string {
 	}
 	serverConfigs := []constant.ServerConfig{
 		{
-			IpAddr: addr,
-			Port:   uint64(port),
+			IpAddr: config.Addr,
+			Port:   uint64(config.Port),
 		},
 	}
 
@@ -28,17 +38,16 @@ func LoadNacosConf(addr, namespaceId, dataId, group string, port int32) string {
 	})
 
 	if err != nil {
-		panic(err)
+		log.Panicln(err.Error())
 	}
 
 	content, err := configClient.GetConfig(vo.ConfigParam{
-		DataId: dataId,
-		Group:  group,
+		DataId: config.DataId,
+		Group:  config.Group,
 	})
 	if err != nil {
-		panic(err)
+		log.Panicln(err.Error())
 	}
 
 	return content
-
 }

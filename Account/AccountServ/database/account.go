@@ -1,16 +1,21 @@
 package database
 
 import (
+	"Account/AccountServ/internal"
+	conf "Account/Conf"
+	logger "Account/Log"
 	share "Account/Share"
 	"fmt"
 	"log"
 
-	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var MysqlDB *gorm.DB
+var nacosConfig conf.NacosConfig
+var AccountServConfig conf.AccountServConfig
+var err error
 
 type Account struct {
 	gorm.Model
@@ -21,30 +26,14 @@ type Account struct {
 	Salt           string `gorm:"not null; comment: use to hash password"`
 }
 
-func loadConfig() *viper.Viper {
-	config := viper.New()
+func init() {
+	logger.Init()
 
-	config.AddConfigPath("./conf")
-	config.SetConfigName("default")
-	config.SetConfigType("yaml")
-
-	if err := config.ReadInConfig(); err != nil {
-		log.Panicf("%s : %s\n", share.ErrConfigFileNotFound, err.Error())
+	if err = internal.LoadAccountServConfig("./conf", "dev", &nacosConfig, &AccountServConfig); err != nil {
+		log.Panicln(err.Error())
 	}
 
-	return config
-}
-
-func init() {
-	config := loadConfig()
-	user := config.GetString("db.user")
-	password := config.GetString("db.password")
-	host := config.GetString("db.host")
-	port := config.GetString("db.port")
-	tableName := config.GetString("db.tableName")
-
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, tableName)
-	var err error
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", AccountServConfig.MysqlConf.User, AccountServConfig.MysqlConf.Password, AccountServConfig.MysqlConf.Host, AccountServConfig.MysqlConf.Port, AccountServConfig.MysqlConf.TableName)
 	MysqlDB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Panicf("%s:%s\n", share.ErrDatabaseConn, err.Error())
