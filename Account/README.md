@@ -46,7 +46,8 @@ curl http://10.7.9.248:8080/health
 cd Account/AccountServ
 go run main.go
 ```
-服务启动后, 会在Consul上注册一个{Name:account_serv, Id:AccountServ1}的服务, 同时终端会一直收到健康检测的请求
+可以在不同的终端启动多个AccountServ服务，每个服务会使用随机的端口号和uuid注册到Consul上
+当使用AccountWeb url请求AccountServ时，会使用`internal/load_balance.go`中定义的负载均衡算法，在已经注册的服务中选择一个响应请求
 
 ```bash
 # 验证web, serv服务是否正常
