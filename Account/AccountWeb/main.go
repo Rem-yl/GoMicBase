@@ -34,5 +34,7 @@ func main() {
 		accountGroup.GET("/jwt_test", middleware.JWTAuthMiddleware(), handler.JWTTestHandler)
 	}
 
+	r.GET("/health", handler.HealthHandler)
+
 	r.Run(dsn)
 }

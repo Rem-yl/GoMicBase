@@ -1,8 +1,11 @@
 # Account
 
 账户服务
+
 ## 资料
 - [如何在Go中使用JWT](https://juejin.cn/post/7093035836689612836)
+- [使用consul做服务发现](https://www.cnblogs.com/majiang/p/14290357.html)
+- [docker-compose启动consul集群](https://www.cnblogs.com/OneSeting/p/17295707.html)
 
 ## 目录架构
 
@@ -18,16 +21,22 @@ cd Account
 docker-compose up -d
 ```
 
+## 相关配置
+1. 本地浏览器访问: 127.0.0.1:8848/nacos/index.html 可以进行Nacos配置
+
+
 ## 思路&步骤
+
 1. 新建mysql的docker-compose
+
    - mysql的默认端口是3306
    - mysql的默认数据保存位置在/var/lib/mysql
    - `lsof -i :3306` : 查看3306端口是否被占用
    - `lsof -i -P -n | grep LISTEN` : 查看所有被占用的端口
-
 2. 构建Account GRRC服务
 3. 构建Account Web服务
 4. JWT功能测试
+
    1. 运行服务
       ```bash
          # shell 1
