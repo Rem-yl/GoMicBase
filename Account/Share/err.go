@@ -16,4 +16,5 @@ const (
 	ErrParseAccount       = "Parse Account Failed"
 	ErrNotRegister        = "Register First"
 	ErrGenJWTFailed       = "Generate JWT Failed"
+	ErrGetConsulClient    = "Get Consul Client Failed"
 )

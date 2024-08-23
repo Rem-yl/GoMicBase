@@ -22,11 +22,15 @@ type ConsulConfig struct {
 type AccountServConfig struct {
 	Host string `json:"host"`
 	Port int32  `json:"port"`
+	Name string `json:"name"`
+	Id   string `json:"id"`
 }
 
 type AccountWebConfig struct {
 	Host string `json:"host"`
 	Port int32  `json:"port"`
+	Name string `json:"name"`
+	Id   string `json:"id"`
 }
 
 type MysqlConfig struct {

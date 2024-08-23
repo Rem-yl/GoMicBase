@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/consul/api"
 )
 
-func getConsulClient() (client *api.Client, err error) {
+func GetConsulClient() (client *api.Client, err error) {
 	defaultConf := api.DefaultConfig()
 	consulConf := AccountConf.ConsulConf
 	defaultConf.Address = fmt.Sprintf("%s:%d", consulConf.Host, consulConf.Port)
@@ -19,10 +19,10 @@ func getConsulClient() (client *api.Client, err error) {
 	return client, nil
 }
 
-func ConsulReg(host string, port int, name, id string) error {
-	client, err := getConsulClient()
+func ConsulRegWeb(host string, port int, name, id string, tags []string) error {
+	client, err := GetConsulClient()
 	if err != nil {
-		return nil
+		return err
 	}
 
 	registration := &api.AgentServiceRegistration{
@@ -30,6 +30,7 @@ func ConsulReg(host string, port int, name, id string) error {
 		Name:    name,
 		Address: host,
 		Port:    port,
+		Tags:    tags,
 		Check: &api.AgentServiceCheck{
 			HTTP:                           fmt.Sprintf("http://%s:%d/health", host, port),
 			Interval:                       "1s",
@@ -42,8 +43,32 @@ func ConsulReg(host string, port int, name, id string) error {
 	return err
 }
 
+func ConsulRegGrpc(host string, port int, name, id string, tags []string) error {
+	client, err := GetConsulClient()
+	if err != nil {
+		return err
+	}
+
+	accountServConf := AccountConf.AccountServConf
+	// register accountServ to consul
+	registration := &api.AgentServiceRegistration{
+		ID:      accountServConf.Id,
+		Name:    accountServConf.Name,
+		Address: accountServConf.Host,
+		Port:    int(accountServConf.Port),
+		Check: &api.AgentServiceCheck{
+			GRPC:                           fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port),
+			Interval:                       "1s",
+			Timeout:                        "3s",
+			DeregisterCriticalServiceAfter: "5s",
+		},
+	}
+	err = client.Agent().ServiceRegister(registration)
+	return err
+}
+
 func GetConsulServiceList() (serviceList map[string]*api.AgentService, err error) {
-	client, err := getConsulClient()
+	client, err := GetConsulClient()
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +82,7 @@ func GetConsulServiceList() (serviceList map[string]*api.AgentService, err error
 }
 
 func GetFilterConsulService(name string) (service map[string]*api.AgentService, err error) {
-	client, err := getConsulClient()
+	client, err := GetConsulClient()
 	if err != nil {
 		return nil, err
 	}
