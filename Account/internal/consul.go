@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/hashicorp/consul/api"
 )
@@ -44,17 +43,30 @@ func ConsulReg(host string, port int, name, id string) error {
 	return err
 }
 
-func GetServiceList() error {
+func GetConsulServiceList() (serviceList map[string]*api.AgentService, err error) {
 	client, err := getConsulClient()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	serviceList, err := client.Agent().Services()
+	serviceList, err = client.Agent().Services()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	log.Panicf("Consul Serive List: %v", serviceList)
 
-	return nil
+	return serviceList, nil
+}
+
+func GetFilterConsulService(name string) (service map[string]*api.AgentService, err error) {
+	client, err := getConsulClient()
+	if err != nil {
+		return nil, err
+	}
+
+	service, err = client.Agent().ServicesWithFilter(name)
+	if err != nil {
+		return nil, err
+	}
+
+	return service, nil
 }
