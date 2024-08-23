@@ -30,7 +30,6 @@ func ConsulReg(host string, port int, name, id string) error {
 		Name:    name,
 		Address: host,
 		Port:    port,
-		Tags:    []string{"test"},
 		Check: &api.AgentServiceCheck{
 			HTTP:                           fmt.Sprintf("http://%s:%d/health", host, port),
 			Interval:                       "1s",
