@@ -4,8 +4,10 @@ import (
 	"Account/AccountWeb/handler"
 	"Account/AccountWeb/middleware"
 	logger "Account/Log"
+	share "Account/Share"
 	"Account/internal"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -36,5 +38,9 @@ func main() {
 
 	r.GET("/health", handler.HealthHandler)
 
+	err := internal.ConsulRegWeb(accountWebConf.Host, int(accountWebConf.Port), accountWebConf.Name, accountWebConf.Id, []string{"test"})
+	if err != nil {
+		log.Panicf("%s:%s\n", share.ErrWebRegister, err.Error())
+	}
 	r.Run(dsn)
 }

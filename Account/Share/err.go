@@ -17,4 +17,6 @@ const (
 	ErrNotRegister        = "Register First"
 	ErrGenJWTFailed       = "Generate JWT Failed"
 	ErrGetConsulClient    = "Get Consul Client Failed"
+	ErrGrpcRegister       = "Grpc Registe Failed"
+	ErrWebRegister        = "Web Registe Failed"
 )

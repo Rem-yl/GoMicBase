@@ -32,6 +32,10 @@ func main() {
 
 	// register health check
 	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
+	err = internal.ConsulRegGrpc(accountServConf.Host, int(accountServConf.Port), accountServConf.Name, accountServConf.Id, []string{"test"})
+	if err != nil {
+		log.Panicf("%s:%s\n", share.ErrGrpcRegister, err.Error())
+	}
 
 	// listen grpc server
 	if err := grpcServer.Serve(listen); err != nil {

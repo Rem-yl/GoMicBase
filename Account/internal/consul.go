@@ -49,15 +49,14 @@ func ConsulRegGrpc(host string, port int, name, id string, tags []string) error 
 		return err
 	}
 
-	accountServConf := AccountConf.AccountServConf
 	// register accountServ to consul
 	registration := &api.AgentServiceRegistration{
-		ID:      accountServConf.Id,
-		Name:    accountServConf.Name,
-		Address: accountServConf.Host,
-		Port:    int(accountServConf.Port),
+		ID:      id,
+		Name:    name,
+		Address: host,
+		Port:    port,
 		Check: &api.AgentServiceCheck{
-			GRPC:                           fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port),
+			GRPC:                           fmt.Sprintf("%s:%d", host, port),
 			Interval:                       "1s",
 			Timeout:                        "3s",
 			DeregisterCriticalServiceAfter: "5s",
@@ -81,16 +80,16 @@ func GetConsulServiceList() (serviceList map[string]*api.AgentService, err error
 	return serviceList, nil
 }
 
-func GetFilterConsulService(name string) (service map[string]*api.AgentService, err error) {
+func GetFilterConsulService(filter string) (serviceList map[string]*api.AgentService, err error) {
 	client, err := GetConsulClient()
 	if err != nil {
 		return nil, err
 	}
 
-	service, err = client.Agent().ServicesWithFilter(name)
+	serviceList, err = client.Agent().ServicesWithFilter(filter)
 	if err != nil {
 		return nil, err
 	}
 
-	return service, nil
+	return serviceList, nil
 }

@@ -18,7 +18,19 @@ import (
 
 func getAccountServClient(ctx *gin.Context) (client pb.AccountServiceClient) {
 	accountServConf := internal.AccountConf.AccountServConf
-	addr := fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port)
+	accountServList, err := internal.GetFilterConsulService(fmt.Sprintf(`Service == "%s"`, accountServConf.Name))
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg":  err.Error(),
+			"data": "{}",
+		})
+	}
+
+	var addr string
+	// TODO: only use one accountServ
+	for _, v := range accountServList {
+		addr = fmt.Sprintf("%s:%d", v.Address, v.Port)
+	}
 
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {

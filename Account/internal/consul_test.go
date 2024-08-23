@@ -15,10 +15,14 @@ func TestConsulRegWeb(t *testing.T) {
 	log.Println("AccountWeb Register Success")
 }
 
-func TestConsulRegWebGrpc(t *testing.T) {
+func TestConsulRegGrpc(t *testing.T) {
 	// cd Account/AccountServ; go run main.go
 	accountServConf := AccountConf.AccountServConf
-	err := ConsulRegGrpc(accountServConf.Host, int(accountServConf.Port), accountServConf.Name, accountServConf.Id, []string{"test"})
+	err := ConsulRegGrpc(accountServConf.Host, int(accountServConf.Port), accountServConf.Name, "AccountServ1", []string{"test"})
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+	err = ConsulRegGrpc(accountServConf.Host, int(accountServConf.Port), accountServConf.Name, "AccountServ2", []string{"test"})
 	if err != nil {
 		log.Panicln(err.Error())
 	}
@@ -36,7 +40,7 @@ func TestGetConsulServiceList(t *testing.T) {
 }
 
 func TestGetFilterConsulService(t *testing.T) {
-	service, err := GetFilterConsulService(`Service == "AccountWeb1"`)
+	service, err := GetFilterConsulService(`Service == "account_serv"`)
 	if err != nil {
 		log.Panicln(err.Error())
 	}
