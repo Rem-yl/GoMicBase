@@ -3,20 +3,20 @@ package main
 import (
 	"Account/AccountServ/pb"
 	"Account/AccountServ/service"
-	logger "Account/Log"
 	share "Account/Share"
 	"Account/internal"
 	"fmt"
 	"log"
 	"net"
 
+	_ "github.com/mbobakov/grpc-consul-resolver" // It's important
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 )
 
 func main() {
-	logger.Init()
+	// logger.Init()
 	accountServConf := internal.AccountConf.AccountServConf
 	dsn := fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port)
 

@@ -8,31 +8,14 @@ import (
 	"Account/internal"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 func getAccountServClient(ctx *gin.Context) (client pb.AccountServiceClient) {
-	accountServConf := internal.AccountConf.AccountServConf
-	accountServList, err := internal.GetFilterConsulService(fmt.Sprintf(`Service == "%s"`, accountServConf.Name))
-	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"msg":  err.Error(),
-			"data": "{}",
-		})
-	}
-
-	var addr string
-	// TODO: only use one accountServ
-	for _, v := range accountServList {
-		addr = fmt.Sprintf("%s:%d", v.Address, v.Port)
-	}
-
-	conn, err := grpc.Dial(addr, grpc.WithInsecure())
+	client, err := internal.GetAccountServClient()
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
 			"msg":  err.Error(),
@@ -42,7 +25,6 @@ func getAccountServClient(ctx *gin.Context) (client pb.AccountServiceClient) {
 		return nil
 	}
 
-	client = pb.NewAccountServiceClient(conn)
 	return client
 }
 

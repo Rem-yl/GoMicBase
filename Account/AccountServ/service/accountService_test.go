@@ -2,21 +2,17 @@ package service
 
 import (
 	"Account/AccountServ/pb"
+	"Account/internal"
 	"context"
 	"log"
 	"testing"
-
-	"google.golang.org/grpc"
 )
 
 func TestCreateAccount(t *testing.T) {
-	// server := AccountService{}
-	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	client, err := internal.GetAccountServClient()
 	if err != nil {
-		log.Panicln(err)
+		log.Panicf("Get Account Serv Client Failed, %s\n", err.Error())
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 
 	req := &pb.CreateAccountRequest{
 		Name:     "ley",
@@ -39,12 +35,10 @@ func TestCreateAccount(t *testing.T) {
 }
 
 func TestGetAccountByName(t *testing.T) {
-	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	client, err := internal.GetAccountServClient()
 	if err != nil {
-		log.Panicln(err)
+		log.Panicf("Get Account Serv Client Failed, %s\n", err.Error())
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 
 	req := &pb.AccountNameRequest{
 		Name: "ley",
@@ -60,12 +54,10 @@ func TestGetAccountByName(t *testing.T) {
 }
 
 func TestGetAccountByPhone(t *testing.T) {
-	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	client, err := internal.GetAccountServClient()
 	if err != nil {
-		log.Panicln(err)
+		log.Panicf("Get Account Serv Client Failed, %s\n", err.Error())
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 	req := pb.AccountPhoneRequest{
 		Phone: "18801117212",
 	}
@@ -80,12 +72,11 @@ func TestGetAccountByPhone(t *testing.T) {
 }
 
 func TestGetAccountById(t *testing.T) {
-	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	client, err := internal.GetAccountServClient()
 	if err != nil {
-		log.Panicln(err)
+		log.Panicf("Get Account Serv Client Failed, %s\n", err.Error())
 	}
 
-	client := pb.NewAccountServiceClient(conn)
 	req := pb.AccountIdRequest{
 		Id: 123,
 	}
@@ -100,12 +91,10 @@ func TestGetAccountById(t *testing.T) {
 }
 
 func TestCheckNamePassword(t *testing.T) {
-	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	client, err := internal.GetAccountServClient()
 	if err != nil {
-		log.Panicln(err)
+		log.Panicf("Get Account Serv Client Failed, %s\n", err.Error())
 	}
-
-	client := pb.NewAccountServiceClient(conn)
 
 	req := &pb.CheckNamePasswordRequest{
 		Name:     "Ram",
