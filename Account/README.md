@@ -16,6 +16,9 @@
 - env : docker启动的环境变量文件
 - internal : 配置读取等全局可用的代码
 
+## 数据库表设计
+<img src="img/image.png" alt="Description" width="30%" height="30%">
+
 ## 服务启动
 ### 1. 启动docker
 ```bash
@@ -42,6 +45,12 @@ curl http://10.7.9.248:8080/health
 ```
 
 ### 4. 启动AccountServ
+通过proto生成go文件
+```bash
+cd Account/AccountServ
+protoc --go_out=. --go-grpc_out=. account.proto
+```
+
 ```bash
 cd Account/AccountServ
 go run main.go

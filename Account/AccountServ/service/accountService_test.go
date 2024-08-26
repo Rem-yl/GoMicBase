@@ -34,6 +34,29 @@ func TestCreateAccount(t *testing.T) {
 	}
 }
 
+func TestGetAccountList(t *testing.T) {
+	client, err := internal.GetAccountServClient()
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	rep := &pb.AccountListRequest{
+		Page:     1,
+		Pagesize: 10,
+	}
+
+	resp, err := client.GetAccountList(context.Background(), rep)
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	log.Printf("Total Account Num: %d\n", resp.Total)
+	for _, v := range resp.Accounts {
+		log.Printf("Name: %s, Phone: %s\n", v.Name, v.Phone)
+	}
+
+}
+
 func TestGetAccountByName(t *testing.T) {
 	client, err := internal.GetAccountServClient()
 	if err != nil {

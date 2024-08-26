@@ -6,13 +6,34 @@ service AccountService {
     rpc CreateAccount(CreateAccountRequest) returns (AccountResponse);
 
     // get 
+    rpc GetAccountList(AccountListRequest) returns (AccountListResponse);
     rpc GetAccountByName(AccountNameRequest) returns (AccountResponse);
     rpc GetAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
     rpc GetAccountById(AccountIdRequest) returns (AccountResponse);
 
     rpc CheckNamePassword(CheckNamePasswordRequest) returns (CheckResponse);
     rpc CheckPhonePassword(CheckPhonePasswordRequest) returns (CheckResponse);
+
+    // delete
+    // rpc DeleteAccountByName(AccountNameRequest) returns (AccountResponse);
+    // rpc DeleteAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
+    // rpc DeleteAccountById(AccountIdRequest) returns (AccountResponse);
+
+    // modify
+    // rpc ModifyAccountByName(AccountNameRequest) returns (AccountResponse);
+    // rpc ModifyAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
+    // rpc ModifyAccountById(AccountIdRequest) returns (AccountResponse);
 } 
+
+message AccountListRequest {
+    int32 page = 1;  // 第几页
+    int32 pagesize = 2; // 每页多少条记录
+}
+
+message AccountListResponse {
+    int32 total = 1;  // 返回了多少条记录
+    repeated AccountResponse accounts = 2;
+}
 
 message AccountResponse {
     uint32 id = 1;

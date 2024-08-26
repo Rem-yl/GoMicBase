@@ -52,6 +52,37 @@ func (server *AccountService) CreateAccount(ctx context.Context, req *pb.CreateA
 	return resp, nil
 }
 
+func (server *AccountService) GetAccountList(ctx context.Context, req *pb.AccountListRequest) (resp *pb.AccountListResponse, err error) {
+	db := database.MysqlDB
+	var accounts []database.Account
+	page := int(req.Page)
+	pageSize := int(req.Pagesize)
+
+	result := db.Limit(pageSize).Offset((page - 1) * pageSize).Find(&accounts)
+	resp = &pb.AccountListResponse{
+		Total:    0,
+		Accounts: []*pb.AccountResponse{},
+	}
+	total := result.RowsAffected
+	if total == 0 {
+		return resp, nil
+	}
+
+	resp.Total = int32(total)
+	for _, account := range accounts {
+		accountResp := &pb.AccountResponse{
+			Id:             uint32(account.ID),
+			Name:           account.Name,
+			Phone:          account.Phone,
+			Password:       account.Password,
+			Salt:           account.Salt,
+			HashedPassword: account.HashedPassword,
+		}
+		resp.Accounts = append(resp.Accounts, accountResp)
+	}
+	return resp, nil
+}
+
 func (server *AccountService) GetAccountByName(ctx context.Context, req *pb.AccountNameRequest) (resp *pb.AccountResponse, err error) {
 	db := database.MysqlDB
 	var account database.Account
