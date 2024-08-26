@@ -54,7 +54,6 @@ func TestGetAccountList(t *testing.T) {
 	for _, v := range resp.Accounts {
 		log.Printf("Name: %s, Phone: %s\n", v.Name, v.Phone)
 	}
-
 }
 
 func TestGetAccountByName(t *testing.T) {
@@ -131,4 +130,23 @@ func TestCheckNamePassword(t *testing.T) {
 	}
 
 	log.Printf("Name: %s, Phone: %s, check: %t\n", req.Name, req.Password, resp.Check)
+}
+
+func TestModifyAccountByPhone(t *testing.T) {
+	client, err := internal.GetAccountServClient()
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	req := &pb.ModifyAccountPhoneRequest{
+		Phone:    "18801117213",
+		Name:     "ley1",
+		Password: "",
+	}
+	resp, err := client.ModifyAccountByPhone(context.Background(), req)
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	log.Printf("Name: %s, Phone: %s, Password: %s", resp.Name, resp.Phone, resp.Password)
 }

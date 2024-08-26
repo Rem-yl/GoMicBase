@@ -19,4 +19,5 @@ const (
 	ErrGetConsulClient    = "Get Consul Client Failed"
 	ErrGrpcRegister       = "Grpc Registe Failed"
 	ErrWebRegister        = "Web Registe Failed"
+	AccountExisted        = "Account Existed"
 )

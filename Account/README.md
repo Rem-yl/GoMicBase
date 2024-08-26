@@ -86,3 +86,10 @@ curl --request PUT http://10.7.9.248:8500/v1/agent/service/deregister/${service-
   ```
 2. 在RapidAPI中使用POST请求 http://10.7.9.248:8080/account/login, 获得返回的JWT token
 3. 在RapidAPI中使用GET请求 http://10.7.9.248:8080/account/jwt_test, 请求头的Auth字段天填写刚刚获得的JWT token
+
+## 测试
+**测试AccountServ/service**
+```bash
+cp Account/dev.yaml Account/AccountServ/
+go test -v service/*
+```

@@ -20,10 +20,14 @@ service AccountService {
     // rpc DeleteAccountById(AccountIdRequest) returns (AccountResponse);
 
     // modify
-    // rpc ModifyAccountByName(AccountNameRequest) returns (AccountResponse);
-    // rpc ModifyAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
-    // rpc ModifyAccountById(AccountIdRequest) returns (AccountResponse);
+    rpc ModifyAccountByPhone(ModifyAccountPhoneRequest) returns (AccountResponse);
 } 
+
+message ModifyAccountPhoneRequest {
+    string phone = 1;
+    string name = 2;
+    string password = 3;
+}
 
 message AccountListRequest {
     int32 page = 1;  // 第几页

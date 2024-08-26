@@ -157,3 +157,46 @@ func (server *AccountService) CheckPhonePassword(ctx context.Context, req *pb.Ch
 
 	return resp, nil
 }
+
+func (server *AccountService) ModifyAccountByPhone(ctx context.Context, req *pb.ModifyAccountPhoneRequest) (resp *pb.AccountResponse, err error) {
+	db := database.MysqlDB
+	var account database.Account
+
+	result := db.Where("phone=?", req.Phone).First(&account)
+	if result.RowsAffected == 0 {
+		log.Printf("Account Not Found: Phone: %s", req.Phone)
+		return nil, errors.New(share.ErrAccountNotFound)
+	}
+
+	// 更新用户信息
+	if req.Name == "" {
+		req.Name = account.Name
+	} else if req.Name == account.Name {
+		log.Printf("Name: %s already exists!", req.Name)
+		return nil, errors.New(share.AccountExisted)
+	}
+
+	if req.Password == "" {
+		req.Password = account.Password
+	}
+	salt, hashedPassword := password.Encode(req.Password, &share.PasswordOption) // 更新用户密码
+
+	update := map[string]interface{}{
+		"name":            req.Name,
+		"password":        req.Password,
+		"hashed_password": hashedPassword,
+		"salt":            salt,
+	}
+
+	result.Updates(update)
+	resp = &pb.AccountResponse{
+		Id:             uint32(account.ID),
+		Name:           account.Name,
+		Phone:          account.Phone,
+		Password:       account.Password,
+		Salt:           account.Salt,
+		HashedPassword: account.HashedPassword,
+	}
+
+	return resp, nil
+}

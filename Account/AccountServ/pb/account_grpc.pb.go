@@ -19,13 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccountService_CreateAccount_FullMethodName      = "/AccountService/CreateAccount"
-	AccountService_GetAccountList_FullMethodName     = "/AccountService/GetAccountList"
-	AccountService_GetAccountByName_FullMethodName   = "/AccountService/GetAccountByName"
-	AccountService_GetAccountByPhone_FullMethodName  = "/AccountService/GetAccountByPhone"
-	AccountService_GetAccountById_FullMethodName     = "/AccountService/GetAccountById"
-	AccountService_CheckNamePassword_FullMethodName  = "/AccountService/CheckNamePassword"
-	AccountService_CheckPhonePassword_FullMethodName = "/AccountService/CheckPhonePassword"
+	AccountService_CreateAccount_FullMethodName        = "/AccountService/CreateAccount"
+	AccountService_GetAccountList_FullMethodName       = "/AccountService/GetAccountList"
+	AccountService_GetAccountByName_FullMethodName     = "/AccountService/GetAccountByName"
+	AccountService_GetAccountByPhone_FullMethodName    = "/AccountService/GetAccountByPhone"
+	AccountService_GetAccountById_FullMethodName       = "/AccountService/GetAccountById"
+	AccountService_CheckNamePassword_FullMethodName    = "/AccountService/CheckNamePassword"
+	AccountService_CheckPhonePassword_FullMethodName   = "/AccountService/CheckPhonePassword"
+	AccountService_ModifyAccountByPhone_FullMethodName = "/AccountService/ModifyAccountByPhone"
 )
 
 // AccountServiceClient is the client API for AccountService service.
@@ -41,6 +42,8 @@ type AccountServiceClient interface {
 	GetAccountById(ctx context.Context, in *AccountIdRequest, opts ...grpc.CallOption) (*AccountResponse, error)
 	CheckNamePassword(ctx context.Context, in *CheckNamePasswordRequest, opts ...grpc.CallOption) (*CheckResponse, error)
 	CheckPhonePassword(ctx context.Context, in *CheckPhonePasswordRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// modify
+	ModifyAccountByPhone(ctx context.Context, in *ModifyAccountPhoneRequest, opts ...grpc.CallOption) (*AccountResponse, error)
 }
 
 type accountServiceClient struct {
@@ -121,6 +124,16 @@ func (c *accountServiceClient) CheckPhonePassword(ctx context.Context, in *Check
 	return out, nil
 }
 
+func (c *accountServiceClient) ModifyAccountByPhone(ctx context.Context, in *ModifyAccountPhoneRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountResponse)
+	err := c.cc.Invoke(ctx, AccountService_ModifyAccountByPhone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility.
@@ -134,6 +147,8 @@ type AccountServiceServer interface {
 	GetAccountById(context.Context, *AccountIdRequest) (*AccountResponse, error)
 	CheckNamePassword(context.Context, *CheckNamePasswordRequest) (*CheckResponse, error)
 	CheckPhonePassword(context.Context, *CheckPhonePasswordRequest) (*CheckResponse, error)
+	// modify
+	ModifyAccountByPhone(context.Context, *ModifyAccountPhoneRequest) (*AccountResponse, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -164,6 +179,9 @@ func (UnimplementedAccountServiceServer) CheckNamePassword(context.Context, *Che
 }
 func (UnimplementedAccountServiceServer) CheckPhonePassword(context.Context, *CheckPhonePasswordRequest) (*CheckResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckPhonePassword not implemented")
+}
+func (UnimplementedAccountServiceServer) ModifyAccountByPhone(context.Context, *ModifyAccountPhoneRequest) (*AccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ModifyAccountByPhone not implemented")
 }
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 func (UnimplementedAccountServiceServer) testEmbeddedByValue()                        {}
@@ -312,6 +330,24 @@ func _AccountService_CheckPhonePassword_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_ModifyAccountByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ModifyAccountPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).ModifyAccountByPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_ModifyAccountByPhone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).ModifyAccountByPhone(ctx, req.(*ModifyAccountPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -346,6 +382,10 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckPhonePassword",
 			Handler:    _AccountService_CheckPhonePassword_Handler,
+		},
+		{
+			MethodName: "ModifyAccountByPhone",
+			Handler:    _AccountService_ModifyAccountByPhone_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
