@@ -41,7 +41,7 @@ services:
     command: agent -server -node=consul2 -bind=0.0.0.0 -client=0.0.0.0 -retry-join=consul1  -datacenter=dc1 -config-dir=/consul/config
     volumes:
       - /Users/yule/Documents/consul_data/consul2/data:/consul/data
-      - ./Users/yule/Documents/consul_data/consul2/config:/consul/config
+      - /Users/yule/Documents/consul_data/consul2/config:/consul/config
     depends_on:
       - consul1
   consul3:
