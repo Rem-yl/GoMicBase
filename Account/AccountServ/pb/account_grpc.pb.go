@@ -26,6 +26,8 @@ const (
 	AccountService_GetAccountById_FullMethodName       = "/AccountService/GetAccountById"
 	AccountService_CheckNamePassword_FullMethodName    = "/AccountService/CheckNamePassword"
 	AccountService_CheckPhonePassword_FullMethodName   = "/AccountService/CheckPhonePassword"
+	AccountService_DeleteAccountByName_FullMethodName  = "/AccountService/DeleteAccountByName"
+	AccountService_DeleteAccountByPhone_FullMethodName = "/AccountService/DeleteAccountByPhone"
 	AccountService_ModifyAccountByPhone_FullMethodName = "/AccountService/ModifyAccountByPhone"
 )
 
@@ -42,6 +44,9 @@ type AccountServiceClient interface {
 	GetAccountById(ctx context.Context, in *AccountIdRequest, opts ...grpc.CallOption) (*AccountResponse, error)
 	CheckNamePassword(ctx context.Context, in *CheckNamePasswordRequest, opts ...grpc.CallOption) (*CheckResponse, error)
 	CheckPhonePassword(ctx context.Context, in *CheckPhonePasswordRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// delete
+	DeleteAccountByName(ctx context.Context, in *AccountNameRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	DeleteAccountByPhone(ctx context.Context, in *AccountPhoneRequest, opts ...grpc.CallOption) (*AccountResponse, error)
 	// modify
 	ModifyAccountByPhone(ctx context.Context, in *ModifyAccountPhoneRequest, opts ...grpc.CallOption) (*AccountResponse, error)
 }
@@ -124,6 +129,26 @@ func (c *accountServiceClient) CheckPhonePassword(ctx context.Context, in *Check
 	return out, nil
 }
 
+func (c *accountServiceClient) DeleteAccountByName(ctx context.Context, in *AccountNameRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountResponse)
+	err := c.cc.Invoke(ctx, AccountService_DeleteAccountByName_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) DeleteAccountByPhone(ctx context.Context, in *AccountPhoneRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountResponse)
+	err := c.cc.Invoke(ctx, AccountService_DeleteAccountByPhone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *accountServiceClient) ModifyAccountByPhone(ctx context.Context, in *ModifyAccountPhoneRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AccountResponse)
@@ -147,6 +172,9 @@ type AccountServiceServer interface {
 	GetAccountById(context.Context, *AccountIdRequest) (*AccountResponse, error)
 	CheckNamePassword(context.Context, *CheckNamePasswordRequest) (*CheckResponse, error)
 	CheckPhonePassword(context.Context, *CheckPhonePasswordRequest) (*CheckResponse, error)
+	// delete
+	DeleteAccountByName(context.Context, *AccountNameRequest) (*AccountResponse, error)
+	DeleteAccountByPhone(context.Context, *AccountPhoneRequest) (*AccountResponse, error)
 	// modify
 	ModifyAccountByPhone(context.Context, *ModifyAccountPhoneRequest) (*AccountResponse, error)
 	mustEmbedUnimplementedAccountServiceServer()
@@ -179,6 +207,12 @@ func (UnimplementedAccountServiceServer) CheckNamePassword(context.Context, *Che
 }
 func (UnimplementedAccountServiceServer) CheckPhonePassword(context.Context, *CheckPhonePasswordRequest) (*CheckResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckPhonePassword not implemented")
+}
+func (UnimplementedAccountServiceServer) DeleteAccountByName(context.Context, *AccountNameRequest) (*AccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAccountByName not implemented")
+}
+func (UnimplementedAccountServiceServer) DeleteAccountByPhone(context.Context, *AccountPhoneRequest) (*AccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAccountByPhone not implemented")
 }
 func (UnimplementedAccountServiceServer) ModifyAccountByPhone(context.Context, *ModifyAccountPhoneRequest) (*AccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ModifyAccountByPhone not implemented")
@@ -330,6 +364,42 @@ func _AccountService_CheckPhonePassword_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_DeleteAccountByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).DeleteAccountByName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_DeleteAccountByName_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).DeleteAccountByName(ctx, req.(*AccountNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_DeleteAccountByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).DeleteAccountByPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_DeleteAccountByPhone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).DeleteAccountByPhone(ctx, req.(*AccountPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AccountService_ModifyAccountByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ModifyAccountPhoneRequest)
 	if err := dec(in); err != nil {
@@ -382,6 +452,14 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckPhonePassword",
 			Handler:    _AccountService_CheckPhonePassword_Handler,
+		},
+		{
+			MethodName: "DeleteAccountByName",
+			Handler:    _AccountService_DeleteAccountByName_Handler,
+		},
+		{
+			MethodName: "DeleteAccountByPhone",
+			Handler:    _AccountService_DeleteAccountByPhone_Handler,
 		},
 		{
 			MethodName: "ModifyAccountByPhone",

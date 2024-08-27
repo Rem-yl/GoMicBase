@@ -15,9 +15,8 @@ service AccountService {
     rpc CheckPhonePassword(CheckPhonePasswordRequest) returns (CheckResponse);
 
     // delete
-    // rpc DeleteAccountByName(AccountNameRequest) returns (AccountResponse);
-    // rpc DeleteAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
-    // rpc DeleteAccountById(AccountIdRequest) returns (AccountResponse);
+    rpc DeleteAccountByName(AccountNameRequest) returns (AccountResponse);
+    rpc DeleteAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
 
     // modify
     rpc ModifyAccountByPhone(ModifyAccountPhoneRequest) returns (AccountResponse);

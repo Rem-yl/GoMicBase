@@ -200,3 +200,49 @@ func (server *AccountService) ModifyAccountByPhone(ctx context.Context, req *pb.
 
 	return resp, nil
 }
+
+func (server *AccountService) DeleteAccountByName(ctx context.Context, req *pb.AccountNameRequest) (resp *pb.AccountResponse, err error) {
+	db := database.MysqlDB
+	var account database.Account
+
+	result := db.Where("name=?", req.Name).First(&account)
+	if result.RowsAffected == 0 {
+		log.Printf("Account Not Found: Name: %s", req.Name)
+		return nil, errors.New(share.ErrAccountNotFound)
+	}
+
+	result.Delete(account.ID)
+
+	resp = &pb.AccountResponse{
+		Id:             uint32(account.ID),
+		Name:           account.Name,
+		Phone:          account.Phone,
+		Password:       account.Phone,
+		Salt:           account.Salt,
+		HashedPassword: account.HashedPassword,
+	}
+	return resp, nil
+}
+
+func (server *AccountService) DeleteAccountByPhone(ctx context.Context, req *pb.AccountPhoneRequest) (resp *pb.AccountResponse, err error) {
+	db := database.MysqlDB
+	var account database.Account
+
+	result := db.Where("phone=?", req.Phone).First(&account)
+	if result.RowsAffected == 0 {
+		log.Printf("Account Not Found: Phone: %s", req.Phone)
+		return nil, errors.New(share.ErrAccountNotFound)
+	}
+
+	result.Delete(account.ID)
+
+	resp = &pb.AccountResponse{
+		Id:             uint32(account.ID),
+		Name:           account.Name,
+		Phone:          account.Phone,
+		Password:       account.Phone,
+		Salt:           account.Salt,
+		HashedPassword: account.HashedPassword,
+	}
+	return resp, nil
+}

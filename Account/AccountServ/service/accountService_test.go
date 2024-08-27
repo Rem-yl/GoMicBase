@@ -150,3 +150,37 @@ func TestModifyAccountByPhone(t *testing.T) {
 
 	log.Printf("Name: %s, Phone: %s, Password: %s", resp.Name, resp.Phone, resp.Password)
 }
+
+func TestDeleteAccountByName(t *testing.T) {
+	client, err := internal.GetAccountServClient()
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	req := &pb.AccountNameRequest{
+		Name: "ley1",
+	}
+	resp, err := client.DeleteAccountByName(context.Background(), req)
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	log.Printf("Delete Name: %s, Phone: %s\n", resp.Name, resp.Phone)
+}
+
+func TestDeleteAccountByPhone(t *testing.T) {
+	client, err := internal.GetAccountServClient()
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	req := &pb.AccountPhoneRequest{
+		Phone: "18801117212",
+	}
+	resp, err := client.DeleteAccountByPhone(context.Background(), req)
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	log.Printf("Delete Name: %s, Phone: %s\n", resp.Name, resp.Phone)
+}
