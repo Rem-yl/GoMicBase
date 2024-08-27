@@ -10,7 +10,7 @@ type BaseModel struct {
 	ID        uint `gorm:"primary_key"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt time.Time `gorm:"index"`
+	DeletedAt time.Time `gorm:"index"` // gorm用于软删除
 }
 
 // Category : 类别标签

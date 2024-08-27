@@ -4,10 +4,11 @@ import (
 	"Account/AccountServ/database"
 	"Account/AccountServ/model"
 	"Account/AccountServ/pb"
-	share "Account/Share"
 	"context"
 	"errors"
 	"log"
+
+	share "github.com/GoMicBase/Share"
 
 	"github.com/anaskhan96/go-password-encoder"
 )

@@ -2,9 +2,10 @@
 package jwt_op
 
 import (
-	share "Account/Share"
 	"errors"
 	"time"
+
+	share "github.com/GoMicBase/Share"
 
 	"github.com/golang-jwt/jwt"
 )

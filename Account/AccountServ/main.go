@@ -3,11 +3,12 @@ package main
 import (
 	"Account/AccountServ/pb"
 	"Account/AccountServ/service"
-	share "Account/Share"
 	"Account/internal"
 	"fmt"
 	"log"
 	"net"
+
+	share "github.com/GoMicBase/Share"
 
 	_ "github.com/mbobakov/grpc-consul-resolver" // It's important
 	"google.golang.org/grpc"

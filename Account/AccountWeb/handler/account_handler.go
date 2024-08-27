@@ -4,12 +4,13 @@ import (
 	"Account/AccountServ/model"
 	"Account/AccountServ/pb"
 	"Account/AccountWeb/jwt_op"
-	share "Account/Share"
 	"Account/internal"
 	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	share "github.com/GoMicBase/Share"
 
 	"github.com/gin-gonic/gin"
 )

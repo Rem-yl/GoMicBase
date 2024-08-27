@@ -3,7 +3,8 @@ package model
 import (
 	"Account/AccountServ/database"
 	"Account/AccountServ/pb"
-	share "Account/Share"
+
+	share "github.com/GoMicBase/Share"
 )
 
 func AccountModel2Pb(account database.Account) (resp *pb.AccountResponse) {

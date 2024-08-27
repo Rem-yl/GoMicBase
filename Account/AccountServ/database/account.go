@@ -3,10 +3,11 @@ package database
 import (
 	conf "Account/Conf"
 	logger "Account/Log"
-	share "Account/Share"
 	"Account/internal"
 	"fmt"
 	"log"
+
+	share "github.com/GoMicBase/Share"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

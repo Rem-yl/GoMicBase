@@ -1,9 +1,9 @@
 package conf
 
 import (
-	share "Account/Share"
 	"log"
 
+	share "github.com/GoMicBase/Share"
 	"github.com/spf13/viper"
 )
 

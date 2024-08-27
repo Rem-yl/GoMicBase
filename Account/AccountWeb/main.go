@@ -4,11 +4,12 @@ import (
 	"Account/AccountWeb/handler"
 	"Account/AccountWeb/middleware"
 	logger "Account/Log"
-	share "Account/Share"
 	"Account/internal"
 	"fmt"
 	"log"
 	"net/http"
+
+	share "github.com/GoMicBase/Share"
 
 	"github.com/gin-gonic/gin"
 )
