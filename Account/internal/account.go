@@ -9,6 +9,15 @@ import (
 var AccountConf conf.AccountConfig
 var nacosConf conf.NacosConfig
 
+type CustomAccount struct {
+	Id             uint32 `json:"id"`
+	Name           string `json:"string"`
+	Phone          string `json:"phone"`
+	Password       string `json:"password"`
+	Salt           string `json:"salt"`
+	HashedPassword string `json:"hashed_password"`
+}
+
 func init() {
 	config := conf.LoadYamlConfig("../", "dev")
 	config.Unmarshal(&nacosConf)
