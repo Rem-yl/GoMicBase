@@ -3,20 +3,14 @@ package database
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"time"
-)
 
-type BaseModel struct {
-	ID        uint `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt time.Time `gorm:"index"` // gorm用于软删除
-}
+	"gorm.io/gorm"
+)
 
 // Category : 类别标签
 type Category struct {
 	// 构建的表结构中有一个parent_category_id列是外键列, 它必须是ID中的值
-	BaseModel
+	gorm.Model
 	Name             string `gorm:"type:varchar(32); not null"`
 	ParentCategoryID uint64
 	ParentCategory   *Category
@@ -24,13 +18,13 @@ type Category struct {
 }
 
 type Brand struct {
-	BaseModel
+	gorm.Model
 	Name string `gorm:"type:varchar(32); not null"`
 	Logo string `gorm:"type:varchar(256); not null; default:''"`
 }
 
 type Advertise struct {
-	BaseModel
+	gorm.Model
 	Index int32  `gorm:"type:int; not null; default: 1"`
 	Image string `gorm:"type:varchar(256); not null"`
 	Url   string `gorm:"type:varchar(256); not null"`
@@ -38,7 +32,7 @@ type Advertise struct {
 
 // Product : 商品数据库
 type Product struct {
-	BaseModel
+	gorm.Model
 	// 如果没有显式地指定 foreignKey 和 references，GORM 会按照约定优于配置的原则自动推断外键
 	// Product 结构体中有一个字段 CategoryID，而你的 Category 结构体中有一个字段 ID，GORM 会自动推断 CategoryID 是指向 Category 表中 ID 字段的外键。
 	CategoryID uint64   `gorm:"not null"` // 根据字段名来推断外键

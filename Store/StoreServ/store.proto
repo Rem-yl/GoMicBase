@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package="./pb";
+
+service StoreService {
+    //品牌表服务
+    rpc CreateNewBrand(CreateNewBrandRequest) returns (BrandResponse);
+}
+
+message CreateNewBrandRequest {
+    string name = 1;
+    string logo = 2;
+}
+
+message BrandResponse {
+    string name = 1;
+    string logo = 2;
+}
