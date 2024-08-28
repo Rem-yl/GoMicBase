@@ -1,13 +1,14 @@
 package internal
 
 import (
+	conf "Account/Conf"
 	"log"
 	"testing"
 )
 
 func TestConsulRegWeb(t *testing.T) {
 	// cd Account/AccountWeb; go run main.go
-	accountWebConf := AccountConf.AccountWebConf
+	accountWebConf := conf.AccountConf.AccountWebConf
 	err := ConsulRegWeb(accountWebConf.Host, int(accountWebConf.Port), accountWebConf.Name, accountWebConf.Id, []string{"test"})
 	if err != nil {
 		log.Panicln(err.Error())
@@ -17,7 +18,7 @@ func TestConsulRegWeb(t *testing.T) {
 
 func TestConsulRegGrpc(t *testing.T) {
 	// cd Account/AccountServ; go run main.go
-	accountServConf := AccountConf.AccountServConf
+	accountServConf := conf.AccountConf.AccountServConf
 	err := ConsulRegGrpc(accountServConf.Host, int(accountServConf.Port), accountServConf.Name, "AccountServ1", []string{"test"})
 	if err != nil {
 		log.Panicln(err.Error())

@@ -1,12 +1,10 @@
-package model
+package database
 
 import (
-	"Account/AccountServ/database"
 	"Account/AccountServ/pb"
-	"Account/internal"
 )
 
-func AccountModel2Pb(account database.Account) (resp *pb.AccountResponse) {
+func AccountModel2Pb(account Account) (resp *pb.AccountResponse) {
 	resp = &pb.AccountResponse{
 		Id:             uint32(account.ID),
 		Name:           account.Name,
@@ -19,8 +17,8 @@ func AccountModel2Pb(account database.Account) (resp *pb.AccountResponse) {
 	return resp
 }
 
-func PbResp2CustomAccount(resp *pb.AccountResponse) (account internal.CustomAccount) {
-	account = internal.CustomAccount{
+func PbResp2CustomAccount(resp *pb.AccountResponse) (account CustomAccount) {
+	account = CustomAccount{
 		Id:             resp.Id,
 		Name:           resp.Name,
 		Phone:          resp.Phone,

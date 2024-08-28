@@ -2,7 +2,6 @@ package service
 
 import (
 	"Account/AccountServ/database"
-	"Account/AccountServ/model"
 	"Account/AccountServ/pb"
 	"context"
 	"errors"
@@ -49,7 +48,7 @@ func (server *AccountService) CreateAccount(ctx context.Context, req *pb.CreateA
 	}
 
 	log.Printf("Create Account: Name: %s, Phone: %s\n", req.Name, req.Phone)
-	resp = model.AccountModel2Pb(account)
+	resp = database.AccountModel2Pb(account)
 	return resp, nil
 }
 
@@ -93,7 +92,7 @@ func (server *AccountService) GetAccountByName(ctx context.Context, req *pb.Acco
 		return nil, errors.New(share.ErrAccountNotFound)
 	}
 
-	resp = model.AccountModel2Pb(account)
+	resp = database.AccountModel2Pb(account)
 	return resp, nil
 }
 
@@ -106,7 +105,7 @@ func (server *AccountService) GetAccountByPhone(ctx context.Context, req *pb.Acc
 		return nil, errors.New(share.ErrAccountNotFound)
 	}
 
-	resp = model.AccountModel2Pb(account)
+	resp = database.AccountModel2Pb(account)
 	return resp, nil
 }
 
@@ -119,7 +118,7 @@ func (server *AccountService) GetAccountById(ctx context.Context, req *pb.Accoun
 		return nil, errors.New(share.ErrAccountNotFound)
 	}
 
-	resp = model.AccountModel2Pb(account)
+	resp = database.AccountModel2Pb(account)
 	return resp, nil
 }
 

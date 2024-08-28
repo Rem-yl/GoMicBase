@@ -1,8 +1,6 @@
-package model
+package database
 
 import (
-	"database/sql/driver"
-	"encoding/json"
 	"time"
 )
 
@@ -59,14 +57,4 @@ type Product struct {
 	ShoreDesc  string   `gorm:"type:varchar(256); not null"`   //商品介绍
 	DescImages []string `gorm:"type:varchar(1024); notl null"` // 商品图片
 	CoverImage string   `gorm:"type:varchar(256); not null"`   // 封面
-}
-
-type MyList []string
-
-func (mylist MyList) Value() (driver.Value, error) {
-	return json.Marshal(mylist)
-}
-
-func (mylist MyList) Scan(v interface{}) error {
-	return json.Unmarshal(v.([]byte), mylist) // v.()是go中的一种断言语句
 }

@@ -3,7 +3,6 @@ package database
 import (
 	conf "Account/Conf"
 	logger "Account/Log"
-	"Account/internal"
 	"fmt"
 	"log"
 
@@ -27,10 +26,19 @@ type Account struct {
 	Salt           string `gorm:"not null; comment: use to hash password"`
 }
 
+type CustomAccount struct {
+	Id             uint32 `json:"id"`
+	Name           string `json:"string"`
+	Phone          string `json:"phone"`
+	Password       string `json:"password"`
+	Salt           string `json:"salt"`
+	HashedPassword string `json:"hashed_password"`
+}
+
 func init() {
 	logger.Init()
 
-	mysqlConf := internal.AccountConf.MysqlConf
+	mysqlConf := conf.AccountConf.MysqlConf
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", mysqlConf.User, mysqlConf.Password, mysqlConf.Host, mysqlConf.Port, mysqlConf.TableName)
 	MysqlDB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

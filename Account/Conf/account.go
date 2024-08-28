@@ -1,12 +1,5 @@
 package conf
 
-import (
-	"log"
-
-	share "github.com/GoMicBase/Share"
-	"github.com/spf13/viper"
-)
-
 type AccountConfig struct {
 	AccountServConf AccountServConfig `json:"account_serv"`
 	AccountWebConf  AccountWebConfig  `json:"account_web"`
@@ -39,17 +32,4 @@ type MysqlConfig struct {
 	Port      int32  `json:"port"`
 	User      string `json:"user"`
 	Password  string `json:"password"`
-}
-
-func LoadYamlConfig(configPath, configName string) *viper.Viper {
-	config := viper.New()
-	config.AddConfigPath(configPath)
-	config.SetConfigName(configName)
-	config.SetConfigType("yaml")
-
-	if err := config.ReadInConfig(); err != nil {
-		log.Panicf("%s : %s\n", share.ErrConfigFileNotFound, err.Error())
-	}
-
-	return config
 }

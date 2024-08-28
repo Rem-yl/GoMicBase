@@ -1,6 +1,7 @@
 package internal
 
 import (
+	conf "Account/Conf"
 	"fmt"
 
 	"github.com/hashicorp/consul/api"
@@ -8,7 +9,7 @@ import (
 
 func GetConsulClient() (client *api.Client, err error) {
 	defaultConf := api.DefaultConfig()
-	consulConf := AccountConf.ConsulConf
+	consulConf := conf.AccountConf.ConsulConf
 	defaultConf.Address = fmt.Sprintf("%s:%d", consulConf.Host, consulConf.Port)
 
 	client, err = api.NewClient(defaultConf)

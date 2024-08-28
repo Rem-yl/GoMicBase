@@ -3,6 +3,7 @@ package main
 import (
 	"Account/AccountServ/pb"
 	"Account/AccountServ/service"
+	conf "Account/Conf"
 	"Account/internal"
 	"fmt"
 	"log"
@@ -18,7 +19,7 @@ import (
 
 func main() {
 	// logger.Init()
-	accountServConf := internal.AccountConf.AccountServConf
+	accountServConf := conf.AccountConf.AccountServConf
 	dsn := fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port)
 
 	grpcServer := grpc.NewServer()

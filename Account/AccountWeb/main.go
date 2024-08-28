@@ -3,6 +3,7 @@ package main
 import (
 	"Account/AccountWeb/handler"
 	"Account/AccountWeb/middleware"
+	conf "Account/Conf"
 	logger "Account/Log"
 	"Account/internal"
 	"fmt"
@@ -17,7 +18,7 @@ import (
 func main() {
 	logger.Init()
 
-	accountWebConf := internal.AccountConf.AccountWebConf
+	accountWebConf := conf.AccountConf.AccountWebConf
 
 	dsn := fmt.Sprintf("%s:%d", accountWebConf.Host, accountWebConf.Port)
 	r := gin.Default()

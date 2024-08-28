@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"Account/AccountServ/model"
+	"Account/AccountServ/database"
 	"Account/AccountServ/pb"
 	"Account/AccountWeb/jwt_op"
 	"Account/internal"
@@ -65,7 +65,7 @@ func GetAccountByIdHandler(ctx *gin.Context) {
 		})
 	}
 
-	account := model.PbResp2CustomAccount(resp)
+	account := database.PbResp2CustomAccount(resp)
 	jsonData, err := json.Marshal(account)
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -109,7 +109,7 @@ func GetAccountByNameHandler(ctx *gin.Context) {
 		})
 	}
 
-	account := model.PbResp2CustomAccount(resp)
+	account := database.PbResp2CustomAccount(resp)
 	jsonData, err := json.Marshal(account)
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -153,7 +153,7 @@ func GetAccountByPhoneHandler(ctx *gin.Context) {
 		})
 	}
 
-	account := model.PbResp2CustomAccount(resp)
+	account := database.PbResp2CustomAccount(resp)
 	jsonData, err := json.Marshal(account)
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -207,7 +207,7 @@ func CreateNewAccountHandler(ctx *gin.Context) {
 		return
 	}
 
-	accountResp := model.PbResp2CustomAccount(resp)
+	accountResp := database.PbResp2CustomAccount(resp)
 	jsonData, err := json.Marshal(accountResp)
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
