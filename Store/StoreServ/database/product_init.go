@@ -34,11 +34,11 @@ func init() {
 		log.Panicf(err.Error())
 	}
 
-	// 	if err = MysqlDB.AutoMigrate(&Category{}); err != nil {
-	// 		log.Panicf(err.Error())
-	// 	}
+	if err = MysqlDB.AutoMigrate(&Category{}); err != nil {
+		log.Panicf(err.Error())
+	}
 
-	//	if err = MysqlDB.AutoMigrate(&Product{}); err != nil {
-	//		log.Panicf(err.Error())
-	//	}
+	if err = MysqlDB.AutoMigrate(&Product{}); err != nil {
+		log.Panicf(err.Error())
+	}
 }
