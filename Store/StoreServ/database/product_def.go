@@ -9,9 +9,9 @@ import (
 
 // Category : 类别标签
 type Category struct {
-	// 构建的表结构中有一个parent_category_id列是外键列, 它必须是ID中的值
 	gorm.Model
-	Name             string `gorm:"type:varchar(32); not null"`
+	// https://gorm.io/zh_CN/docs/belongs_to.html
+	Name             string `gorm:"type:varchar(32); not null; index"` // index代表这个字段是一个索引(可能是外键)
 	ParentCategoryID uint64
 	ParentCategory   *Category
 	SubCategory      []*Category `gorm:"foreignKey:ParentCategoryID; references: ID"`
@@ -19,7 +19,7 @@ type Category struct {
 
 type Brand struct {
 	gorm.Model
-	Name string `gorm:"type:varchar(32); not null"`
+	Name string `gorm:"type:varchar(32); not null; index"` // index代表这个字段是一个索引(可能是外键)
 	Logo string `gorm:"type:varchar(256); not null; default:''"`
 }
 
@@ -35,11 +35,11 @@ type Product struct {
 	gorm.Model
 	// 如果没有显式地指定 foreignKey 和 references，GORM 会按照约定优于配置的原则自动推断外键
 	// Product 结构体中有一个字段 CategoryID，而你的 Category 结构体中有一个字段 ID，GORM 会自动推断 CategoryID 是指向 Category 表中 ID 字段的外键。
-	CategoryID uint64   `gorm:"not null"` // 根据字段名来推断外键
-	Category   Category // Product访问Category中的字段需要通过Product.Category来访问
+	CategoryName string   `gorm:"not null"`
+	Category     Category `gorm:"foreignKey:CategoryName; references:Name"`
 
-	BrandID uint64 `gorm:"not null"`
-	Brand   Brand  // Brand中的字段会直接成为Product中的字段, 不需要通过Product.Brand来访问
+	BrandName string `gorm:"not null"`
+	Brand     Brand  `gorm:"foreignKey:BrandName; references:Name"`
 
 	Selling  bool `gorm:"default:false"`
 	ShipFree bool `gorm:"default:false"`  // 是否包邮
