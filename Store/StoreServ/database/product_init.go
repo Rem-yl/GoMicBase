@@ -1,7 +1,7 @@
 package database
 
 import (
-	conf "Store/StoreServ/Conf"
+	conf "Store/Conf"
 	"fmt"
 	"log"
 
@@ -15,7 +15,7 @@ var MysqlDB *gorm.DB
 var err error
 
 func init() {
-	mysqlConf := conf.StoreServConf.MysqlConf
+	mysqlConf := conf.StoreConf.MysqlConf
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", mysqlConf.User, mysqlConf.Password, mysqlConf.Host, mysqlConf.Port, mysqlConf.DdName)
 	log.Printf("mysql addr : %s", dsn)

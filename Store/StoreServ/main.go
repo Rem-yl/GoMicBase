@@ -1,7 +1,7 @@
 package main
 
 import (
-	conf "Store/StoreServ/Conf"
+	conf "Store/Conf"
 	"Store/StoreServ/pb"
 	"Store/StoreServ/service"
 	"fmt"
@@ -16,8 +16,8 @@ import (
 
 func main() {
 	// grpc注册服务
-	storeGrpcConf := conf.StoreServConf.StoreGrpcConf
-	consulConf := conf.StoreServConf.ConsulConf
+	storeGrpcConf := conf.StoreConf.StoreServConf
+	consulConf := conf.StoreConf.ConsulConf
 
 	dsn := fmt.Sprintf("%s:%d", storeGrpcConf.Host, storeGrpcConf.Port)
 

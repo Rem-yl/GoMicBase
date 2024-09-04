@@ -1,7 +1,7 @@
 package internal
 
 import (
-	conf "Store/StoreServ/Conf"
+	conf "Store/Conf"
 	"Store/StoreServ/pb"
 	"fmt"
 
@@ -12,8 +12,8 @@ import (
 
 // load StoreGrpcServ client from consul
 func GetStoreServClient() (pb.StoreServiceClient, error) {
-	consulConf := conf.StoreServConf.ConsulConf
-	servName := conf.StoreServConf.StoreGrpcConf.Name
+	consulConf := conf.StoreConf.ConsulConf
+	servName := conf.StoreConf.StoreServConf.Name
 
 	dsn := fmt.Sprintf("consul://%s:%d/%s?wait=14s", consulConf.Host, consulConf.Port, servName)
 

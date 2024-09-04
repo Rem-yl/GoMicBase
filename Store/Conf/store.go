@@ -2,13 +2,21 @@ package conf
 
 import share "github.com/GoMicBase/Share"
 
-type StoreServConfig struct {
-	StoreGrpcConf StoreGrpcConfig    `json:"store_serv"`
+type StoreConfig struct {
+	StoreServConf StoreServConfig    `json:"store_serv"`
+	StoreWebConf  StoreWebConfig     `json:"store_web"`
 	MysqlConf     MysqlConfig        `json:"mysql"`
 	ConsulConf    share.ConsulConfig `json:"consul"`
 }
 
-type StoreGrpcConfig struct {
+type StoreServConfig struct {
+	Name string `json:"name"`
+	Host string `json:"host"`
+	Port int32  `json:"port"`
+	Id   string `json:"id"`
+}
+
+type StoreWebConfig struct {
 	Name string `json:"name"`
 	Host string `json:"host"`
 	Port int32  `json:"port"`
