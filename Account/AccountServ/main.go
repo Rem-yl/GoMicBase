@@ -4,7 +4,6 @@ import (
 	"Account/AccountServ/pb"
 	"Account/AccountServ/service"
 	conf "Account/Conf"
-	"Account/internal"
 	"fmt"
 	"log"
 	"net"
@@ -19,6 +18,7 @@ import (
 
 func main() {
 	accountServConf := conf.AccountConf.AccountServConf
+	consulConf := conf.AccountConf.ConsulConf
 	dsn := fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port)
 
 	grpcServer := grpc.NewServer()
@@ -33,7 +33,11 @@ func main() {
 
 	// register health check
 	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
-	err = internal.ConsulRegGrpc(accountServConf.Host, int(accountServConf.Port), accountServConf.Name, accountServConf.Id, []string{"test"})
+	consulClient, err := share.GetConsulClient(share.ConsulConfig(consulConf))
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+	err = share.ConsulRegGrpc(consulClient, accountServConf.Host, int(accountServConf.Port), accountServConf.Name, accountServConf.Id, []string{"test"})
 	if err != nil {
 		log.Panicf("%s:%s\n", share.ErrGrpcRegister, err.Error())
 	}

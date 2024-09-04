@@ -1,8 +1,8 @@
 package service
 
 import (
-	"Store/StoreServ/internal"
 	"Store/StoreServ/pb"
+	"Store/internal"
 	"context"
 	"log"
 	"testing"

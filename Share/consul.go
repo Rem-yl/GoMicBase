@@ -44,6 +44,25 @@ func ConsulRegGrpc(client *api.Client, host string, port int, name, id string, t
 	return err
 }
 
+func ConsulRegWeb(client *api.Client, host string, port int, name, id string, tags []string) error {
+	registration := &api.AgentServiceRegistration{
+		ID:      id,
+		Name:    name,
+		Address: host,
+		Port:    port,
+		Tags:    tags,
+		Check: &api.AgentServiceCheck{
+			HTTP:                           fmt.Sprintf("http://%s:%d/health", host, port),
+			Interval:                       "1s",
+			Timeout:                        "3s",
+			DeregisterCriticalServiceAfter: "5s",
+		},
+	}
+
+	err := client.Agent().ServiceRegister(registration)
+	return err
+}
+
 func GetConsulServiceList(client *api.Client) (serviceList map[string]*api.AgentService, err error) {
 	serviceList, err = client.Agent().Services()
 	if err != nil {

@@ -5,7 +5,6 @@ import (
 	"Account/AccountWeb/middleware"
 	conf "Account/Conf"
 	logger "Account/Log"
-	"Account/internal"
 	"fmt"
 	"log"
 	"net/http"
@@ -19,6 +18,7 @@ func main() {
 	logger.Init()
 
 	accountWebConf := conf.AccountConf.AccountWebConf
+	consulConf := conf.AccountConf.ConsulConf
 
 	dsn := fmt.Sprintf("%s:%d", accountWebConf.Host, accountWebConf.Port)
 	r := gin.Default()
@@ -40,7 +40,12 @@ func main() {
 
 	r.GET("/health", handler.HealthHandler)
 
-	err := internal.ConsulRegWeb(accountWebConf.Host, int(accountWebConf.Port), accountWebConf.Name, accountWebConf.Id, []string{"test"})
+	consulClient, err := share.GetConsulClient(share.ConsulConfig(consulConf))
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	err = share.ConsulRegWeb(consulClient, accountWebConf.Host, int(accountWebConf.Port), accountWebConf.Name, accountWebConf.Id, []string{"test"})
 	if err != nil {
 		log.Panicf("%s:%s\n", share.ErrWebRegister, err.Error())
 	}
