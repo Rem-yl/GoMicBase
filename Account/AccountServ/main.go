@@ -18,7 +18,6 @@ import (
 )
 
 func main() {
-	// logger.Init()
 	accountServConf := conf.AccountConf.AccountServConf
 	dsn := fmt.Sprintf("%s:%d", accountServConf.Host, accountServConf.Port)
 
