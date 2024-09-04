@@ -10,10 +10,6 @@ import (
 	share "github.com/GoMicBase/Share"
 )
 
-type StoreService struct {
-	pb.UnimplementedStoreServiceServer
-}
-
 func (server *StoreService) CreateNewBrand(ctx context.Context, req *pb.CreateNewBrandRequest) (resp *pb.BrandResponse, err error) {
 	db := database.MysqlDB
 	var brand database.Brand

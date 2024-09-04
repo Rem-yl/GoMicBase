@@ -1,7 +1,18 @@
 package conf
 
-type StoreSevConfig struct {
-	MysqlConf MysqlConfig `json:"mysql"`
+import share "github.com/GoMicBase/Share"
+
+type StoreServConfig struct {
+	StoreGrpcConf StoreGrpcConfig    `json:"store_serv"`
+	MysqlConf     MysqlConfig        `json:"mysql"`
+	ConsulConf    share.ConsulConfig `json:"consul"`
+}
+
+type StoreGrpcConfig struct {
+	Name string `json:"name"`
+	Host string `json:"host"`
+	Port int32  `json:"port"`
+	Id   string `json:"id"`
 }
 
 type MysqlConfig struct {

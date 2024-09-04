@@ -8,7 +8,7 @@ import (
 )
 
 var NacosConf share.NacosConfig
-var StoreServConf StoreSevConfig
+var StoreServConf StoreServConfig
 
 func LoadDevConfig() {
 	config, err := share.LoadYamlConfig("../", "dev")
@@ -39,4 +39,7 @@ func init() {
 	}
 
 	LoadStoreServConfig(content)
+	storeGrpcPort := share.GetRandomPort(StoreServConf.StoreGrpcConf.Host)
+	StoreServConf.StoreGrpcConf.Id = share.GetNewUuid()
+	StoreServConf.StoreGrpcConf.Port = int32(storeGrpcPort)
 }
