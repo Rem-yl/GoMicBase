@@ -21,4 +21,5 @@ const (
 	ErrWebRegister        = "Web Registe Failed"
 	AccountExisted        = "Account Existed"
 	BrandExisted          = "Brand Existed"
+	ErrBrandNotFound      = "Brand Not Found"
 )

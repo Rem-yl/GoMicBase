@@ -18,8 +18,6 @@ func init() {
 	mysqlConf := conf.StoreConf.MysqlConf
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", mysqlConf.User, mysqlConf.Password, mysqlConf.Host, mysqlConf.Port, mysqlConf.DdName)
-	log.Printf("mysql addr : %s", dsn)
-
 	MysqlDB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {

@@ -19,16 +19,12 @@ func LoadDevConfig() {
 	if err := config.Unmarshal(&NacosConf); err != nil {
 		log.Panicln(err.Error())
 	}
-
-	log.Printf("NacosConfig: %v", NacosConf)
 }
 
 func LoadStoreServConfig(content string) {
 	if err := json.Unmarshal([]byte(content), &StoreConf); err != nil {
 		log.Panicf(err.Error())
 	}
-
-	log.Printf("StoreServConfig: %v", StoreConf)
 }
 
 func init() {

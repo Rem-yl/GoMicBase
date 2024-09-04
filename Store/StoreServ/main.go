@@ -34,7 +34,6 @@ func main() {
 	// register health check
 	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
 
-	log.Printf("Consul config : %v", consulConf)
 	consulClient, err := share.GetConsulClient(consulConf)
 	if err != nil {
 		log.Println(err.Error())
