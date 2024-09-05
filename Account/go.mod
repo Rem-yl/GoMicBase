@@ -1,8 +1,9 @@
 module Account
 
-go 1.22.5
+go 1.23.0
 
 require (
+	github.com/GoMicBase/Register v0.0.0-00010101000000-000000000000
 	github.com/GoMicBase/Share v0.0.0-00010101000000-000000000000
 	github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72
 	github.com/gin-gonic/gin v1.10.0
@@ -44,7 +45,7 @@ require (
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/hashicorp/consul/api v1.29.2 // indirect
+	github.com/hashicorp/consul/api v1.29.4 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.6.3 // indirect
@@ -105,3 +106,5 @@ require (
 replace github.com/GoMicBase/Share => ../Share
 
 replace github.com/yourusername/share => ../Share
+
+replace github.com/GoMicBase/Register => ../Register

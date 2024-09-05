@@ -7,7 +7,11 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
 
+	register "github.com/GoMicBase/Register"
 	share "github.com/GoMicBase/Share"
 
 	_ "github.com/mbobakov/grpc-consul-resolver" // It's important
@@ -33,17 +37,43 @@ func main() {
 
 	// register health check
 	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
-	consulClient, err := share.GetConsulClient(share.ConsulConfig(consulConf))
-	if err != nil {
+	consulRegistery := &register.ConsulRegistery{
+		Config: &register.ConsulConfig{
+			Host: consulConf.Host,
+			Port: consulConf.Port,
+		},
+	}
+
+	if err = consulRegistery.NewClient(); err != nil {
 		log.Panicln(err.Error())
 	}
-	err = share.ConsulRegGrpc(consulClient, accountServConf.Host, int(accountServConf.Port), accountServConf.Name, accountServConf.Id, []string{"test"})
+
+	if err = consulRegistery.RegisterGrpcServ(accountServConf.Host, int(accountServConf.Port), accountServConf.Name, accountServConf.Id, []string{"test"}); err != nil {
+		log.Panicln(err.Error())
+	}
+
 	if err != nil {
 		log.Panicf("%s:%s\n", share.ErrGrpcRegister, err.Error())
 	}
 
 	// listen grpc server
-	if err := grpcServer.Serve(listen); err != nil {
-		log.Panicf("%s:%s\n", share.ErrGrpcServerFailed, err.Error())
+	go func() {
+		if err := grpcServer.Serve(listen); err != nil {
+			log.Panicf("%s:%s\n", share.ErrGrpcServerFailed, err.Error())
+		}
+	}()
+
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+
+	<-signalChan
+	log.Println("Received interrupt signal, shutting down gracefully...")
+	// 注销Grpc服务
+	if err = consulRegistery.Deregister(accountServConf.Id); err != nil {
+		log.Println(err.Error())
 	}
+
+	// 停止Grpc服务
+	grpcServer.GracefulStop()
+	log.Println("Grpc server shut down gracefully")
 }

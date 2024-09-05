@@ -8,8 +8,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
-	share "github.com/GoMicBase/Share"
+	register "github.com/GoMicBase/Register"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,14 +43,40 @@ func main() {
 
 	r.GET("/health", handler.HealthHandler)
 
-	consulClient, err := share.GetConsulClient(share.ConsulConfig(consulConf))
+	// consulClient, err := share.GetConsulClient(share.ConsulConfig(consulConf))
+	consulRegistery := &register.ConsulRegistery{
+		Config: &register.ConsulConfig{
+			Host: consulConf.Host,
+			Port: consulConf.Port,
+		},
+	}
+
+	err := consulRegistery.NewClient()
 	if err != nil {
 		log.Panicln(err.Error())
 	}
 
-	err = share.ConsulRegWeb(consulClient, accountWebConf.Host, int(accountWebConf.Port), accountWebConf.Name, accountWebConf.Id, []string{"test"})
-	if err != nil {
-		log.Panicf("%s:%s\n", share.ErrWebRegister, err.Error())
+	if err = consulRegistery.RegisterWeb(accountWebConf.Host, int(accountWebConf.Port), accountWebConf.Name, accountWebConf.Id, []string{"test"}); err != nil {
+		log.Panicf(err.Error())
 	}
-	r.Run(dsn)
+	log.Printf("Start Account Web on: %s:%d", accountWebConf.Host, accountWebConf.Port)
+
+	go func() {
+		if err := r.Run(dsn); err != nil {
+			log.Panicln(err.Error())
+		}
+	}()
+
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+
+	<-signalChan
+	log.Println("Received interrupt signal, shutting down gracefully...")
+
+	if err = consulRegistery.Deregister(accountWebConf.Id); err != nil {
+		log.Println(err.Error())
+	}
+
+	log.Println("Account Web shutdown.")
+
 }
