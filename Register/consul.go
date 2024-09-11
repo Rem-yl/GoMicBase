@@ -36,7 +36,7 @@ func (c *ConsulRegistery) RegisterGrpcServ(host string, port int, name, id strin
 		Address: host,
 		Port:    port,
 		Check: &api.AgentServiceCheck{
-			GRPC:                           fmt.Sprintf("%s:%d", host, port),
+			GRPC:                           fmt.Sprintf("%s:%d", "host.docker.internal", port), // consul使用docker部署, 在docker内 host.docker.internal 映射到宿主机的localhost, 避免网络问题
 			Interval:                       "1s",
 			Timeout:                        "3s",
 			DeregisterCriticalServiceAfter: "5s",
@@ -55,7 +55,7 @@ func (c *ConsulRegistery) RegisterWeb(host string, port int, name, id string, ta
 		Port:    port,
 		Tags:    tags,
 		Check: &api.AgentServiceCheck{
-			HTTP:                           fmt.Sprintf("http://%s:%d/health", host, port),
+			HTTP:                           fmt.Sprintf("http://%s:%d/health", "host.docker.internal", port), // consul使用docker部署, 在docker内 host.docker.internal 映射到宿主机的localhost, 避免网络问题
 			Interval:                       "1s",
 			Timeout:                        "3s",
 			DeregisterCriticalServiceAfter: "5s",

@@ -1,12 +1,12 @@
 package conf
 
-import share "github.com/GoMicBase/Share"
+import register "github.com/GoMicBase/Register"
 
 type StoreConfig struct {
-	StoreServConf StoreServConfig    `json:"store_serv"`
-	StoreWebConf  StoreWebConfig     `json:"store_web"`
-	MysqlConf     MysqlConfig        `json:"mysql"`
-	ConsulConf    share.ConsulConfig `json:"consul"`
+	StoreServConf StoreServConfig       `json:"store_serv"`
+	StoreWebConf  StoreWebConfig        `json:"store_web"`
+	MysqlConf     MysqlConfig           `json:"mysql"`
+	ConsulConf    register.ConsulConfig `json:"consul"`
 }
 
 type StoreServConfig struct {

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 
+	register "github.com/GoMicBase/Register"
 	share "github.com/GoMicBase/Share"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -34,11 +35,19 @@ func main() {
 	// register health check
 	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
 
-	consulClient, err := share.GetConsulClient(consulConf)
+	consulRegistery := &register.ConsulRegistery{
+		Config: &register.ConsulConfig{
+			Host: consulConf.Host,
+			Port: consulConf.Port,
+		},
+	}
+
+	err = consulRegistery.NewClient()
 	if err != nil {
 		log.Println(err.Error())
 	}
-	err = share.ConsulRegGrpc(consulClient, storeGrpcConf.Host, int(storeGrpcConf.Port), storeGrpcConf.Name, storeGrpcConf.Id, []string{"test"})
+
+	err = consulRegistery.RegisterGrpcServ(storeGrpcConf.Host, int(storeGrpcConf.Port), storeGrpcConf.Name, storeGrpcConf.Id, []string{"test"})
 	if err != nil {
 		log.Panicf("%s:%s\n", share.ErrGrpcRegister, err.Error())
 	}

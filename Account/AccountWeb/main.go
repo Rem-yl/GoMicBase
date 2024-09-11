@@ -43,7 +43,6 @@ func main() {
 
 	r.GET("/health", handler.HealthHandler)
 
-	// consulClient, err := share.GetConsulClient(share.ConsulConfig(consulConf))
 	consulRegistery := &register.ConsulRegistery{
 		Config: &register.ConsulConfig{
 			Host: consulConf.Host,

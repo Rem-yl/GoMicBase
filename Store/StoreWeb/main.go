@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	share "github.com/GoMicBase/Share"
+	register "github.com/GoMicBase/Register"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,13 +27,19 @@ func main() {
 		})
 	}
 	r.GET("/health", handler.HealthHandler)
-
-	consulClient, err := share.GetConsulClient(consulConf)
-	if err != nil {
-		log.Panicln(err.Error())
+	consulRegistery := &register.ConsulRegistery{
+		Config: &register.ConsulConfig{
+			Host: consulConf.Host,
+			Port: consulConf.Port,
+		},
 	}
 
-	err = share.ConsulRegWeb(consulClient, storeWebConf.Host, int(storeWebConf.Port), storeWebConf.Name, storeWebConf.Id, []string{"test"})
+	err := consulRegistery.NewClient()
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	err = consulRegistery.RegisterWeb(storeWebConf.Host, int(storeWebConf.Port), storeWebConf.Name, storeWebConf.Id, []string{"test"})
 	if err != nil {
 		log.Panicln(err.Error())
 	}
