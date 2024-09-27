@@ -9,6 +9,15 @@ curl -I http://127.0.0.1:8848/nacos
 curl -I http://127.0.0.1:8500/ui/dc1/services
 ```
 
+```bash
+cd app/account/entry
+go run .
+
+cd app/account/web
+go run main.go
+curl 127.0.0.1:8080/account/test
+```
+
 ## 问题记录
 **nacos-go-sdk调用PublishConfig时报错 `NacosException: Client not connected,current status:STARTING`**
 - [github-issue](https://github.com/alibaba/nacos/issues/6154)

@@ -1,0 +1,83 @@
+syntax="proto3";
+package account.v1;
+
+
+option go_package="../v1;v1";
+
+service AccountService {
+    // create
+    rpc CreateAccount(CreateAccountRequest) returns (AccountResponse);
+
+    // get 
+    rpc GetAccountList(AccountListRequest) returns (AccountListResponse);
+    rpc GetAccountByName(AccountNameRequest) returns (AccountResponse);
+    rpc GetAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
+    rpc GetAccountById(AccountIdRequest) returns (AccountResponse);
+
+    rpc CheckNamePassword(CheckNamePasswordRequest) returns (CheckResponse);
+    rpc CheckPhonePassword(CheckPhonePasswordRequest) returns (CheckResponse);
+
+    // delete
+    rpc DeleteAccountByName(AccountNameRequest) returns (AccountResponse);
+    rpc DeleteAccountByPhone(AccountPhoneRequest) returns (AccountResponse);
+
+    // modify
+    rpc ModifyAccountByPhone(ModifyAccountPhoneRequest) returns (AccountResponse);
+} 
+
+message ModifyAccountPhoneRequest {
+    string phone = 1;
+    string name = 2;
+    string password = 3;
+}
+
+message AccountListRequest {
+    int32 page = 1;  // 第几页
+    int32 pagesize = 2; // 每页多少条记录
+}
+
+message AccountListResponse {
+    int32 total = 1;  // 返回了多少条记录
+    repeated AccountResponse accounts = 2;
+}
+
+message AccountResponse {
+    uint32 id = 1;
+    string name = 2;
+    string phone = 3;
+    string password = 4;
+    string salt = 5;
+    string hashedPassword = 6;
+}
+
+message CheckResponse {
+    bool check = 1;
+}
+
+message CheckNamePasswordRequest {
+    string name = 1;
+    string password = 2;
+}
+
+message CheckPhonePasswordRequest {
+    string phone = 1;
+    string password = 2;
+}
+
+message AccountNameRequest {
+    string name = 1;
+}
+
+message AccountPhoneRequest {
+    string phone = 1;
+}
+
+message AccountIdRequest {
+    uint32 id = 1;
+}
+
+message CreateAccountRequest {
+    string name = 1;
+    string phone = 2;
+    string password = 3;
+}
