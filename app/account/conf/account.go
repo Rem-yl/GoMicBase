@@ -7,29 +7,9 @@ import (
 )
 
 type AccountConfig struct {
-	MysqlConfig       MysqlConfig       `json:"mysql"`
-	AccountServConfig AccountServConfig `json:"account_serv"`
-	ConsulConfig      ConsulConfig      `json:"consul"`
-}
-
-type MysqlConfig struct {
-	TableName string `json:"tableName"`
-	Host      string `json:"host"`
-	Port      int32  `json:"port"`
-	User      string `json:"user"`
-	Password  string `json:"password"`
-}
-
-type AccountServConfig struct {
-	Host string `json:"host"`
-	Port int32  `json:"port"`
-	Name string `json:"name"`
-	Id   string `json:"id"`
-}
-
-type ConsulConfig struct {
-	Host string `json:"host"`
-	Port int32  `json:"port"`
+	MysqlConfig       cfg.MysqlConfig    `json:"mysql"`
+	AccountServConfig cfg.GrpcServConfig `json:"account_serv"`
+	ConsulConfig      cfg.ConsulConfig   `json:"consul"`
 }
 
 var (

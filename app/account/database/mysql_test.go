@@ -1,14 +1,14 @@
 package database
 
 import (
-	"GoMicBase/app/account/conf"
+	"GoMicBase/pkg/cfg"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewMysqlDB(t *testing.T) {
-	config := &conf.MysqlConfig{
+	config := &cfg.MysqlConfig{
 		TableName: "test",
 		Host:      "127.0.0.1",
 		Port:      3306,
@@ -19,7 +19,7 @@ func TestNewMysqlDB(t *testing.T) {
 	_, err := NewMysqlDB(config)
 	assert.Equal(t, nil, err)
 
-	config = &conf.MysqlConfig{
+	config = &cfg.MysqlConfig{
 		TableName: "notest",
 		Host:      "127.0.0.1",
 		Port:      3306,

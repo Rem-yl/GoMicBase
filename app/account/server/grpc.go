@@ -2,8 +2,8 @@ package server
 
 import (
 	v1 "GoMicBase/api/account/service/v1"
-	"GoMicBase/app/account/conf"
 	"GoMicBase/app/account/service"
+	"GoMicBase/pkg/cfg"
 	"fmt"
 
 	_ "github.com/mbobakov/grpc-consul-resolver" // It's important
@@ -21,7 +21,7 @@ func NewGrpcServer(service *service.AccountService) *grpc.Server {
 	return grpcServer
 }
 
-func GetGrpcClient(consulConfig conf.ConsulConfig, servConfig conf.AccountServConfig) (v1.AccountServiceClient, error) {
+func GetGrpcClient(consulConfig cfg.ConsulConfig, servConfig cfg.GrpcServConfig) (v1.AccountServiceClient, error) {
 	dsn := fmt.Sprintf("consul://%s:%d/%s?wait=14s", consulConfig.Host, consulConfig.Port, servConfig.Name)
 	conn, err := grpc.Dial(
 		dsn,
